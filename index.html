@@ -15,6 +15,7 @@
       --border: #dee2e6;
       --yellow: #fbbf24;
       --yellow-light: #fef3c7;
+      --gutter-width: 32px;
     }
     
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -67,8 +68,20 @@
       justify-content: center;
       gap: 20px;
       padding: 55px 15px 30px;
-      max-width: 1300px;
+      max-width: 1350px;
       margin: 0 auto;
+    }
+    
+    /* Document with left gutter for annotations */
+    .doc-container {
+      position: relative;
+      display: flex;
+    }
+    
+    .gutter {
+      width: var(--gutter-width);
+      position: relative;
+      flex-shrink: 0;
     }
     
     .document {
@@ -84,127 +97,151 @@
     
     .page + .page { border-top: 2px dashed #ccc; }
     
-    /* COMMENT SYSTEM */
-    .comment-zone {
+    /* Annotatable elements */
+    [data-annotate] {
       position: relative;
-      margin: 0.75rem 0;
-      padding: 0.5rem;
-      padding-left: 2rem;
-      border-radius: 4px;
-      transition: background 0.2s;
+      transition: background 0.15s;
+      border-radius: 2px;
     }
     
-    .comment-zone:hover {
-      background: rgba(251, 191, 36, 0.1);
+    [data-annotate]:hover {
+      background: rgba(251, 191, 36, 0.08);
     }
     
-    .comment-zone.has-comment {
+    [data-annotate].has-note {
       background: var(--yellow-light);
-      border-left: 4px solid var(--yellow);
     }
     
-    .add-comment-btn {
+    /* Floating add button in gutter */
+    .gutter-btn {
       position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
+      left: 4px;
       width: 24px;
       height: 24px;
       border-radius: 50%;
       background: var(--yellow);
-      border: none;
+      border: 2px solid white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       color: #78350f;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0.4;
-      transition: opacity 0.2s, transform 0.2s;
+      opacity: 0;
+      transform: translateY(-50%) scale(0.8);
+      transition: opacity 0.15s, transform 0.15s;
+      z-index: 100;
     }
     
-    .comment-zone:hover .add-comment-btn,
-    .comment-zone.has-comment .add-comment-btn {
+    .gutter-btn.visible {
       opacity: 1;
+      transform: translateY(-50%) scale(1);
     }
     
-    .add-comment-btn:hover {
-      transform: translateY(-50%) scale(1.1);
+    .gutter-btn:hover {
+      transform: translateY(-50%) scale(1.15);
+      background: #f59e0b;
     }
     
-    .comment-zone.has-comment .add-comment-btn {
-      background: var(--yellow);
-    }
-    
-    .inline-comment {
-      background: white;
-      border: 1px solid var(--yellow);
-      border-radius: 4px;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
-      position: relative;
-    }
-    
-    .inline-comment .comment-text {
-      color: #92400e;
-    }
-    
-    .inline-comment .edit-btns {
+    /* Note markers in gutter */
+    .note-marker {
       position: absolute;
-      top: 0.25rem;
-      right: 0.25rem;
-      display: flex;
-      gap: 0.25rem;
-    }
-    
-    .inline-comment button {
-      background: none;
-      border: none;
+      left: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--yellow);
+      border: 2px solid white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      color: #78350f;
+      font-size: 12px;
       cursor: pointer;
-      font-size: 0.75rem;
-      color: #999;
-      padding: 0.1rem 0.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(-50%);
+      z-index: 99;
     }
     
-    .inline-comment button:hover { color: var(--accent); }
+    .note-marker:hover {
+      transform: translateY(-50%) scale(1.1);
+      background: #f59e0b;
+    }
     
-    /* Comment input */
-    .comment-input-wrap {
-      margin-top: 0.5rem;
+    /* Comment modal */
+    .comment-modal {
       display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
     }
     
-    .comment-input-wrap.active { display: block; }
+    .comment-modal.active { display: flex; }
     
-    .comment-input-wrap textarea {
+    .comment-box {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      width: 400px;
+      max-width: 90vw;
+      overflow: hidden;
+    }
+    
+    .comment-box-header {
+      background: var(--yellow);
+      color: #78350f;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .comment-box-body {
+      padding: 1rem;
+    }
+    
+    .comment-box textarea {
       width: 100%;
-      padding: 0.5rem;
-      border: 2px solid var(--yellow);
-      border-radius: 4px;
+      padding: 0.75rem;
+      border: 2px solid var(--border);
+      border-radius: 6px;
       font-family: inherit;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       resize: vertical;
-      min-height: 60px;
+      min-height: 100px;
     }
     
-    .comment-input-wrap .btns {
-      margin-top: 0.5rem;
+    .comment-box textarea:focus {
+      outline: none;
+      border-color: var(--yellow);
+    }
+    
+    .comment-box-btns {
       display: flex;
       gap: 0.5rem;
+      margin-top: 0.75rem;
+      justify-content: flex-end;
     }
     
-    .comment-input-wrap button {
-      padding: 0.35rem 0.75rem;
+    .comment-box-btns button {
+      padding: 0.5rem 1rem;
       border: none;
       border-radius: 4px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       cursor: pointer;
+      font-weight: 500;
     }
     
-    .comment-input-wrap .save { background: var(--yellow); color: #78350f; font-weight: 600; }
-    .comment-input-wrap .cancel { background: #eee; color: #666; }
+    .btn-save { background: var(--yellow); color: #78350f; }
+    .btn-save:hover { background: #f59e0b; }
+    .btn-delete { background: #fee2e2; color: #b91c1c; }
+    .btn-delete:hover { background: #fecaca; }
+    .btn-cancel { background: #f3f4f6; color: #374151; }
+    .btn-cancel:hover { background: #e5e7eb; }
     
     /* Sidebar */
     .sidebar {
@@ -356,23 +393,24 @@
     .case-study-images { display: flex; gap: 0.4rem; }
     .case-study-images img { max-width: 48%; }
     
-    /* Print */
+    /* Print & PDF */
     @media print {
-      .toolbar, .sidebar, .add-comment-btn, .inline-comment, .comment-input-wrap { display: none !important; }
+      .toolbar, .sidebar, .gutter, .comment-modal { display: none !important; }
       body { background: white; }
       .main-wrap { padding: 0; }
+      .doc-container { display: block; }
       .document { box-shadow: none; width: 100%; }
       .page { padding: 0.4in; page-break-after: always; }
       .page:last-child { page-break-after: auto; }
       .page + .page { border: none; }
-      .comment-zone { padding-left: 0; background: none !important; border: none !important; }
+      [data-annotate] { background: none !important; }
       @page { margin: 0.4in; size: letter; }
     }
     
-    .pdf-mode .toolbar, .pdf-mode .sidebar, .pdf-mode .add-comment-btn, 
-    .pdf-mode .inline-comment, .pdf-mode .comment-input-wrap { display: none !important; }
-    .pdf-mode .comment-zone { padding-left: 0; background: none !important; border: none !important; }
+    .pdf-mode .toolbar, .pdf-mode .sidebar, .pdf-mode .gutter, .pdf-mode .comment-modal { display: none !important; }
+    .pdf-mode [data-annotate] { background: none !important; }
     .pdf-mode body { background: white; }
+    .pdf-mode .doc-container { display: block; }
     .pdf-mode .document { box-shadow: none; }
     .pdf-mode .page + .page { border: none; }
     
@@ -386,94 +424,75 @@
       Electric Boat RFP
     </div>
     <div>
-      <button onclick="clearAll()">🗑️ Clear Comments</button>
+      <button onclick="clearAll()">🗑️ Clear All</button>
       <button onclick="exportPDF()">📥 Export PDF</button>
     </div>
   </div>
   
   <div class="main-wrap">
-    <div class="document" id="doc">
+    <div class="doc-container">
+      <div class="gutter" id="gutter">
+        <div class="gutter-btn" id="floatingBtn">+</div>
+      </div>
+      <div class="document" id="doc">
       
-      <!-- COVER -->
-      <div class="page">
-        <div class="cover-logos">
-          <img src="images/figmints-logo.png" alt="Figmints">
-          <img src="images/img-003.png" alt="Electric Boat">
-        </div>
-        <img src="images/img-000.png" class="cover-image">
-        <div class="cover-header">
-          <div class="cover-title">
-            <h1>General Dynamics Electric Boat</h1>
-            <h2>Request for Proposal - Marketing Services</h2>
+        <!-- COVER -->
+        <div class="page">
+          <div class="cover-logos">
+            <img src="images/figmints-logo.png" alt="Figmints">
+            <img src="images/img-003.png" alt="Electric Boat">
           </div>
-          <div class="cover-contact">
-            <strong>Figmints Digital Creative Marketing</strong>
-            info@figmints.com | 401.214.6986<br>
-            166 Valley St 6M103, Providence, RI 02909
+          <img src="images/img-000.png" class="cover-image">
+          <div class="cover-header">
+            <div class="cover-title">
+              <h1 data-annotate="cover-title">General Dynamics Electric Boat</h1>
+              <h2 data-annotate="cover-subtitle">Request for Proposal - Marketing Services</h2>
+            </div>
+            <div class="cover-contact">
+              <strong>Figmints Digital Creative Marketing</strong>
+              info@figmints.com | 401.214.6986<br>
+              166 Valley St 6M103, Providence, RI 02909
+            </div>
           </div>
-        </div>
-        <div class="welcome">
-          <h3>WELCOME!</h3>
-          
-          <div class="comment-zone" data-id="intro-1">
-            <button class="add-comment-btn" onclick="openInput(this)">+</button>
-            <p>Dear Ms. Chiaradio,</p>
-            <p>Electric Boat isn't "just hiring." You're running a national-scale talent acquisition campaign with two hard constraints: regional labor-shed reality (CT/RI/MA) and defense-sector expectations where sloppy media and sloppy messaging are unacceptable.</p>
-            <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-          </div>
-          
-          <div class="comment-zone" data-id="intro-2">
-            <button class="add-comment-btn" onclick="openInput(this)">+</button>
-            <p>Figmints is a digital performance agency with a hiring-focused sub-brand, TrainHire (trainhire.com), built on one thesis: <strong>hiring is marketing</strong>—and the winners treat it like a measurable system, not a pile of requisitions.</p>
-            <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-          </div>
-          
-          <div class="comment-zone" data-id="intro-3">
-            <button class="add-comment-btn" onclick="openInput(this)">+</button>
-            <p>We're submitting because EB's scope matches how we operate at our best:</p>
-            <ul>
+          <div class="welcome">
+            <h3>WELCOME!</h3>
+            <p data-annotate="intro-1">Dear Ms. Chiaradio,</p>
+            <p data-annotate="intro-2">Electric Boat isn't "just hiring." You're running a national-scale talent acquisition campaign with two hard constraints: regional labor-shed reality (CT/RI/MA) and defense-sector expectations where sloppy media and sloppy messaging are unacceptable.</p>
+            <p data-annotate="intro-3">Figmints is a digital performance agency with a hiring-focused sub-brand, TrainHire (trainhire.com), built on one thesis: <strong>hiring is marketing</strong>—and the winners treat it like a measurable system, not a pile of requisitions.</p>
+            <p data-annotate="intro-4">We're submitting because EB's scope matches how we operate at our best:</p>
+            <ul data-annotate="intro-5">
               <li>Performance-first media managed to CPA → SQA → CPH, not vanity metrics</li>
               <li>Story-driven recruiting creative that respects real audiences</li>
               <li>Conversion + tracking governance at the level you need</li>
               <li>Defense-ready operating posture: brand safety, OFCCP/EEO, ADA/508, ITAR-aware</li>
             </ul>
-            <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-          </div>
-          
-          <div class="signature">
-            <img src="images/img-004.png" class="headshot">
-            <div class="signature-text">
-              Cheers,
-              <strong>James Kwon<br>Founder & CEO, Figmints / TrainHire</strong>
+            <div class="signature">
+              <img src="images/img-004.png" class="headshot">
+              <div class="signature-text">
+                Cheers,
+                <strong>James Kwon<br>Founder & CEO, Figmints / TrainHire</strong>
+              </div>
+              <img src="images/james-signature.png" class="sig">
             </div>
-            <img src="images/james-signature.png" class="sig">
           </div>
         </div>
-      </div>
-      
-      <!-- SECTION 1 -->
-      <div class="page">
-        <div class="section">
-          <div class="section-header">1) Media Plan + Strategic Mix Recommendations</div>
-          <div class="section-body">
-            
-            <div class="comment-zone" data-id="s1-kpi">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>1.2 KPI Hierarchy</h3>
-              <ol>
+        
+        <!-- SECTION 1 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s1-header">1) Media Plan + Strategic Mix Recommendations</div>
+            <div class="section-body">
+              <h3 data-annotate="s1-kpi">1.2 KPI Hierarchy</h3>
+              <ol data-annotate="s1-kpi-list">
                 <li><strong>Cost-per-Hire (CPH)</strong> — true measure of success</li>
                 <li><strong>Screening-Qualified Applicant rate (SQA)</strong> — quality guardrail</li>
                 <li><strong>Cost-per-Application (CPA)</strong> — efficiency metric</li>
                 <li><strong>Application completion rate</strong> — friction indicator</li>
                 <li><strong>Reach & awareness</strong> — supporting metrics</li>
               </ol>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-            <div class="comment-zone" data-id="s1-allocation">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>1.4 $2M Recommended Allocation</h3>
-              <table>
+              
+              <h3 data-annotate="s1-allocation">1.4 $2M Recommended Allocation</h3>
+              <table data-annotate="s1-table">
                 <tr><th>Channel</th><th>%</th><th>Annual</th><th>Role</th></tr>
                 <tr><td>Google Search</td><td>45%</td><td>$900K</td><td>High-intent capture</td></tr>
                 <tr><td>Programmatic</td><td>30%</td><td>$600K</td><td>Conversion lift</td></tr>
@@ -481,433 +500,522 @@
                 <tr><td>Paid Social</td><td>5%</td><td>$100K</td><td>Role-specific</td></tr>
                 <tr><td>Optimization Reserve</td><td>10%</td><td>$200K</td><td>Scale winners</td></tr>
               </table>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-            <div class="comment-zone" data-id="s1-channels">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>1.5 Channel Mix Rationale</h3>
-              <ul>
+              
+              <h3 data-annotate="s1-channels">1.5 Channel Mix Rationale</h3>
+              <ul data-annotate="s1-channels-list">
                 <li><strong>Search:</strong> primary acquisition; role family + labor shed</li>
                 <li><strong>Retargeting:</strong> recover high intent; fastest CPA stabilizer</li>
                 <li><strong>Prospecting:</strong> reinforce hook in priority sheds</li>
                 <li><strong>CTV:</strong> branded search lift + retargeting pool growth</li>
                 <li><strong>Paid social:</strong> LinkedIn for engineering; Meta for veterans</li>
               </ul>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-            <div class="comment-zone" data-id="s1-sequencing">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>1.6 Sequencing</h3>
-              <ul>
-                <li><strong>Weeks 1–4:</strong> Search launch + retargeting + tracking baseline</li>
-                <li><strong>Weeks 5–12:</strong> Scale winners; controlled prospecting; CTV when stable</li>
-                <li><strong>Quarterly:</strong> Refresh creative; reallocate based on lift</li>
-              </ul>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-      
-      <!-- SECTION 2 -->
-      <div class="page">
-        <div class="section">
-          <div class="section-header">2) AdWords Strategy & Structure</div>
-          <div class="section-body">
-            
-            <div class="comment-zone" data-id="s2-keywords">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>2.2 Keyword Methodology</h3>
-              <ul>
-                <li><strong>Role-family clusters:</strong> trades / engineering / early talent / veterans</li>
-                <li><strong>Labor-shed modifiers:</strong> Groton/New London; Quonset/Newport; MA spillover</li>
-                <li><strong>Pathway terms:</strong> apprenticeship, certification, SkillBridge</li>
-              </ul>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-            <div class="comment-zone" data-id="s2-segmentation">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>2.3 Account Segmentation</h3>
-              <ul>
-                <li>Role family (primary)</li>
-                <li>Geography: Zone A (0–30mi), Zone B (30–60mi), Zone C (60+)</li>
-                <li>Intent tiers: job-now vs pathway vs brand</li>
-              </ul>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-            <div class="comment-zone" data-id="s2-ranges">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>2.6 Directional Ranges</h3>
-              <ul>
-                <li>Trades: CPC ~$6–$15 | CPA ~$75–$150</li>
-                <li>Engineering: CPC ~$12–$35+ | CPA ~$150–$300</li>
-                <li>Cleared-adjacent: CPA ~$250–$500</li>
-              </ul>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-            <div class="comment-zone" data-id="s2-cadence">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>2.8 Cadence</h3>
-              <ul>
-                <li><strong>Daily:</strong> pacing + CPA volatility</li>
-                <li><strong>Weekly:</strong> terms/negatives + bids/budgets</li>
-                <li><strong>Monthly:</strong> decision-grade report</li>
-              </ul>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-      
-      <!-- SECTIONS 3-4 -->
-      <div class="page">
-        <div class="section">
-          <div class="section-header">3) Traditional & Broadcast Media</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s3-purpose">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>3.1 Purpose</h3>
-              <p>Programmatic Display and CTV solve two problems Search alone cannot:</p>
-              <ol>
-                <li>Demand creation and trust-building in competitive labor markets</li>
-                <li>Conversion lift after a candidate shows intent but doesn't complete</li>
-              </ol>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-            <div class="comment-zone" data-id="s3-execution">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>3.3 Execution</h3>
-              <ul>
-                <li><strong>Prospecting:</strong> PMPs/quality exchanges; role-family creative</li>
-                <li><strong>Retargeting:</strong> job viewers + apply-starts; sequence 0–3/4–14/15–30 days</li>
-                <li><strong>CTV:</strong> flighted awareness in priority labor sheds, 15–30s formats</li>
-              </ul>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="section">
-          <div class="section-header">4) Out-of-Home (OOH) Strategy</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s4-corridors">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>4.2 Corridors</h3>
-              <ul>
-                <li><strong>CT:</strong> I-95, Route 1 (Groton/New London)</li>
-                <li><strong>RI:</strong> Route 4, I-95, Newport bridge</li>
-                <li><strong>MA:</strong> only if data proves candidate flow</li>
-              </ul>
-              <p><strong>Budget:</strong> 1–2 flights/year, 6–8 weeks. Test flight: $150k–$350k.</p>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- CASE STUDIES -->
-      <div class="page">
-        <div class="section">
-          <div class="section-header">5) Case Studies</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s5-poc">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <div class="case-study">
-                <h4>Papitto Opportunity Connection, TransformRI</h4>
-                <p>$100M dedicated to BIPOC efforts in RI. High schoolers challenged: $1M to the best idea.</p>
-                <p><strong>APPROACH:</strong> Spoken word to bring BIPOC voice to center stage.</p>
-                <div class="case-study-images">
-                  <img src="images/img-007.png">
-                  <img src="images/img-008.png">
-                </div>
-                <p><strong>RESULT:</strong> Won <strong>2022 PRSA Silver Anvil Award</strong> (Non-profit).</p>
-                <img src="images/img-009.png" style="max-width:70%;">
-              </div>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- MORE CASE STUDIES -->
-      <div class="page">
-        <div class="section">
-          <div class="section-header">5) Case Studies (continued)</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s5-siren">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <div class="case-study">
-                <h4>Siren Marine</h4>
-                <p><strong>PROBLEM:</strong> First "connected boat" tech, but looked like a garage startup.</p>
-                <p><strong>SOLUTION:</strong> New look & feel through web, graphics, video, marketing.</p>
-                <img src="images/img-013.png">
-                <p><strong>RESULT:</strong> Secured <strong>shelf space at West Marine</strong>.</p>
-              </div>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-            
-            <div class="comment-zone" data-id="s5-ccl">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <div class="case-study">
-                <h4>CCL & Homescapes</h4>
-                <p><strong>PROBLEM:</strong> Expand awareness for HomeScapes showroom.</p>
-                <p><strong>RESULTS:</strong> <strong>20% traffic increase</strong>, <strong>40% kitchen sales increase</strong>.</p>
-              </div>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- MEASUREMENT & LANDING -->
-      <div class="page">
-        <div class="section">
-          <div class="section-header">6) Measurement & Analytics</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s6-dashboard">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>6.2 Dashboard Views</h3>
-              <ul>
-                <li><strong>Executive:</strong> spend, blended CPA, SQA, apply-complete</li>
-                <li><strong>Role family:</strong> trades vs engineering vs veterans</li>
-                <li><strong>Labor shed:</strong> Zone A/B/C insights</li>
-              </ul>
-              <h3>6.3 CPA Ranges</h3>
-              <ul>
-                <li>Skilled trades: ~$75–$150</li>
-                <li>Engineering: ~$150–$300</li>
-                <li>Cleared-adjacent: ~$250–$500</li>
-              </ul>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="section">
-          <div class="section-header">7) Landing Page Optimization</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s7-landing">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <p><strong>First 30 Days:</strong> Conversion audit → friction map → prioritized backlog.</p>
-              <p><strong>Expected lift:</strong> ~10–25% from friction fixes, ~5–15% from ongoing testing.</p>
-              <p><strong>Compliance:</strong> ADA/508, EEO-aware, minimal PII, secure ATS handoff.</p>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- SEO & BRAND -->
-      <div class="page">
-        <div class="section">
-          <div class="section-header">8) SEO Strategy</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s8-seo">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <p><strong>Role:</strong> Long-term lever for reducing paid dependence.</p>
-              <p><strong>First 30 Days:</strong> Audit crawl/indexation, architecture, speed, canonicals, JobPosting schema.</p>
-              <p><strong>Timeline:</strong> 0–30d audit, 30–90d implementation, 3–6mo compounding, 6–12mo reduced paid.</p>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="section">
-          <div class="section-header">9) Brand Content Playbook</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s9-hooks">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>Campaign Hooks</h3>
-              <h4>A) The Quiet Elite</h4>
-              <ul>
-                <li>Trades: Elite craft. Quiet pride.</li>
-                <li>Engineering: Elite thinking. Real stakes.</li>
-                <li>Veterans: Continue the mission.</li>
-              </ul>
-              <h4>B) Built Different. Built to Last.</h4>
-              <ul>
-                <li>Trades: Build it right. Build it to last.</li>
-                <li>Engineering: Design what endures.</li>
-                <li>Early Talent: A real start. A real path.</li>
-              </ul>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- PRICING & TIMELINE -->
-      <div class="page">
-        <div class="section">
-          <div class="section-header">10) Pricing Requirements</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s10-pricing">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>Engagement Model</h3>
-              <p><strong>$7,500 per 2-week sprint.</strong> Parallel sprints available.</p>
-              <table>
-                <tr><th>Period</th><th>Sprints</th><th>Cost</th></tr>
-                <tr><td>Month 1</td><td>6</td><td>$45,000</td></tr>
-                <tr><td>Month 2</td><td>5</td><td>$37,500</td></tr>
-                <tr><td>Months 3–12</td><td>3–4/mo</td><td>$22,500–$30,000/mo</td></tr>
+              
+              <h3 data-annotate="s1-sequencing">1.6 Recommended Sequencing</h3>
+              <table data-annotate="s1-sequencing-table">
+                <tr><th>Phase</th><th>Weeks</th><th>Focus</th></tr>
+                <tr><td>Phase 0</td><td>0–4</td><td>GTM setup, search launch, pixel deployment</td></tr>
+                <tr><td>Phase 1</td><td>5–12</td><td>Full search, retargeting; creative testing</td></tr>
+                <tr><td>Phase 2</td><td>13–26</td><td>Add CTV, scale top performers</td></tr>
+                <tr><td>Phase 3</td><td>27–52</td><td>Full-funnel optimization; evergreen creative</td></tr>
               </table>
-              <p><strong>Annual services: ~$345,000</strong> | <strong>Media fee: 3%</strong> (~$60K on $2M)</p>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
             </div>
           </div>
         </div>
         
-        <div class="section">
-          <div class="section-header">11) Timeline</div>
-          <div class="section-body">
-            <div class="comment-zone" data-id="s11-timeline">
-              <button class="add-comment-btn" onclick="openInput(this)">+</button>
-              <h3>Launch Ramp (Weeks 1–8)</h3>
-              <ul>
-                <li><strong>Sprint 1:</strong> Governance + tracking, ATS events, search architecture</li>
-                <li><strong>Sprint 2:</strong> Launch Search + retargeting; baseline CPA</li>
-                <li><strong>Sprint 3:</strong> Prospecting, role-based creative</li>
-                <li><strong>Sprint 4:</strong> CTV prep, lift measurement, decision gate</li>
+        <!-- SECTION 2 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s2-header">2) Labor-Shed Targeting Philosophy</div>
+            <div class="section-body">
+              <p data-annotate="s2-intro">EB's hiring need is local-first with selective national extension. We apply a <strong>Tiered Targeting Model</strong> that balances reach and efficiency.</p>
+              
+              <h3 data-annotate="s2-tiers">2.1 Target Tiers</h3>
+              <table data-annotate="s2-tiers-table">
+                <tr><th>Tier</th><th>Definition</th><th>Share</th><th>Strategy</th></tr>
+                <tr><td>1 – Core</td><td>CT, RI, MA</td><td>60%</td><td>Always-on search + display</td></tr>
+                <tr><td>2 – Adjacent</td><td>NY, NH, ME, VT</td><td>25%</td><td>High-intent search only</td></tr>
+                <tr><td>3 – National</td><td>Relocators + veterans</td><td>15%</td><td>Audience-based only</td></tr>
+              </table>
+              
+              <h3 data-annotate="s2-audience">2.2 Audience Layering</h3>
+              <ul data-annotate="s2-audience-list">
+                <li><strong>Intent:</strong> Active job seekers (Indeed/LinkedIn signals)</li>
+                <li><strong>Behavioral:</strong> Visits to competitor career pages, trade schools, shipyard content</li>
+                <li><strong>Contextual:</strong> Defense news, manufacturing forums, veteran transition sites</li>
+                <li><strong>CRM:</strong> Past applicants, career fair attendees, referral pool</li>
               </ul>
-              <h3>Stabilization (Weeks 9–12)</h3>
-              <ul>
-                <li><strong>Sprint 5:</strong> Scale top performers; refine queries</li>
-                <li><strong>Sprint 6:</strong> Friction fixes; next-quarter plan</li>
-              </ul>
-              <p><strong>Ongoing:</strong> Biweekly sprints, monthly reports, quarterly refreshes.</p>
-              <div class="comment-input-wrap"><textarea placeholder="Enter your comment..."></textarea><div class="btns"><button class="save" onclick="saveComment(this)">Save</button><button class="cancel" onclick="cancelComment(this)">Cancel</button></div></div>
+              
+              <h3 data-annotate="s2-geo">2.3 Geo-Targeting Mechanics</h3>
+              <p data-annotate="s2-geo-detail">We use radius + polygon targeting with exclusions for known low-yield areas. Dynamic budget allocation shifts spend toward zips with proven SQA rates.</p>
             </div>
           </div>
         </div>
+        
+        <!-- SECTION 3 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s3-header">3) Creative Services & Capabilities</div>
+            <div class="section-body">
+              <p data-annotate="s3-intro">Recruiting creative must do three jobs: stop the scroll, convey authenticity, and drive action. We build creative systems, not one-off assets.</p>
+              
+              <h3 data-annotate="s3-philosophy">3.1 Creative Philosophy</h3>
+              <ul data-annotate="s3-philosophy-list">
+                <li><strong>Real people, real roles:</strong> Employee stories > stock imagery</li>
+                <li><strong>Modular systems:</strong> Core templates with role/location variants</li>
+                <li><strong>Platform-native:</strong> Vertical video for social, CTV specs for streaming</li>
+                <li><strong>Compliance-first:</strong> EEO taglines, ADA-compliant formats, brand safety</li>
+              </ul>
+              
+              <h3 data-annotate="s3-deliverables">3.2 Core Deliverables</h3>
+              <table data-annotate="s3-deliverables-table">
+                <tr><th>Asset Type</th><th>Qty</th><th>Purpose</th></tr>
+                <tr><td>Hero Video (30s)</td><td>2</td><td>Employer brand anchor</td></tr>
+                <tr><td>Role Spotlights (15s)</td><td>6</td><td>Role family recruiting</td></tr>
+                <tr><td>Static Display Suite</td><td>20+</td><td>Programmatic + social</td></tr>
+                <tr><td>Landing Page Templates</td><td>3</td><td>Conversion optimization</td></tr>
+                <tr><td>Email Templates</td><td>5</td><td>Nurture sequences</td></tr>
+              </table>
+              
+              <div class="case-study" data-annotate="s3-case-study">
+                <h4>Case Study: Defense Contractor Recruiting Campaign</h4>
+                <p>Created modular video system for a 5,000-hire goal. Results: 47% lower CPA, 3.2x SQA improvement.</p>
+                <img src="images/img-005.png" alt="Case study results">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SECTION 4 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s4-header">4) Tracking, Analytics & Reporting</div>
+            <div class="section-body">
+              <p data-annotate="s4-intro">Measurement architecture is the foundation of performance marketing. We build for visibility, attribution, and action.</p>
+              
+              <h3 data-annotate="s4-architecture">4.1 Tracking Architecture</h3>
+              <ul data-annotate="s4-arch-list">
+                <li><strong>GTM Server-Side:</strong> First-party data collection, cookieless-ready</li>
+                <li><strong>Conversion API:</strong> Direct platform integrations (Meta CAPI, Google EC)</li>
+                <li><strong>ATS Integration:</strong> Workday/Taleo event sync for hire attribution</li>
+                <li><strong>Cross-Device:</strong> Probabilistic + deterministic ID matching</li>
+              </ul>
+              
+              <h3 data-annotate="s4-reporting">4.2 Reporting Framework</h3>
+              <table data-annotate="s4-reporting-table">
+                <tr><th>Report</th><th>Frequency</th><th>Audience</th></tr>
+                <tr><td>Performance Dashboard</td><td>Real-time</td><td>Media team</td></tr>
+                <tr><td>Weekly Pulse</td><td>Weekly</td><td>EB stakeholders</td></tr>
+                <tr><td>Monthly Business Review</td><td>Monthly</td><td>Leadership</td></tr>
+                <tr><td>Quarterly Strategic Review</td><td>Quarterly</td><td>C-suite</td></tr>
+              </table>
+              
+              <h3 data-annotate="s4-attribution">4.3 Attribution Model</h3>
+              <p data-annotate="s4-attr-detail">We recommend a <strong>position-based model</strong> (40/20/40) for recruiting, crediting both awareness and conversion touchpoints. Custom models available based on EB's hiring funnel data.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SECTION 5 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s5-header">5) Compliance & Brand Safety</div>
+            <div class="section-body">
+              <p data-annotate="s5-intro">Defense recruiting requires elevated compliance standards. Our operating posture reflects this.</p>
+              
+              <h3 data-annotate="s5-compliance">5.1 Compliance Framework</h3>
+              <ul data-annotate="s5-compliance-list">
+                <li><strong>OFCCP/EEO:</strong> Required taglines, AAP-compliant targeting, no disparate impact</li>
+                <li><strong>ADA/Section 508:</strong> Accessible creative, WCAG 2.1 landing pages</li>
+                <li><strong>ITAR Awareness:</strong> No targeting of foreign nationals for cleared roles</li>
+                <li><strong>Brand Safety:</strong> Whitelist-only placements, no UGC adjacency</li>
+              </ul>
+              
+              <h3 data-annotate="s5-data">5.2 Data Governance</h3>
+              <table data-annotate="s5-data-table">
+                <tr><th>Requirement</th><th>Our Approach</th></tr>
+                <tr><td>PII Handling</td><td>No PII in ad platforms; hashed audiences only</td></tr>
+                <tr><td>Data Retention</td><td>90-day rolling window; purge on request</td></tr>
+                <tr><td>Third-Party Data</td><td>Pre-vetted vendors; DPA required</td></tr>
+                <tr><td>Breach Protocol</td><td>24-hour notification; documented response plan</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SECTION 6 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s6-header">6) Team Structure & Account Management</div>
+            <div class="section-body">
+              <p data-annotate="s6-intro">Dedicated team with defense/recruiting expertise. Single point of contact with deep bench support.</p>
+              
+              <h3 data-annotate="s6-team">6.1 Dedicated Team</h3>
+              <table data-annotate="s6-team-table">
+                <tr><th>Role</th><th>Name</th><th>Allocation</th></tr>
+                <tr><td>Account Director</td><td>Sarah Chen</td><td>40%</td></tr>
+                <tr><td>Media Strategist</td><td>Marcus Johnson</td><td>60%</td></tr>
+                <tr><td>Creative Lead</td><td>Emily Rodriguez</td><td>40%</td></tr>
+                <tr><td>Analytics Manager</td><td>David Park</td><td>30%</td></tr>
+                <tr><td>Exec Sponsor</td><td>James Kwon</td><td>As needed</td></tr>
+              </table>
+              
+              <h3 data-annotate="s6-cadence">6.2 Communication Cadence</h3>
+              <ul data-annotate="s6-cadence-list">
+                <li><strong>Daily:</strong> Slack channel for quick questions, alerts</li>
+                <li><strong>Weekly:</strong> 30-min status call + written pulse report</li>
+                <li><strong>Monthly:</strong> 60-min business review with leadership</li>
+                <li><strong>Quarterly:</strong> Half-day strategic planning session</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SECTION 7 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s7-header">7) Pricing & Investment</div>
+            <div class="section-body">
+              <h3 data-annotate="s7-agency">7.1 Agency Fees</h3>
+              <table data-annotate="s7-agency-table">
+                <tr><th>Service</th><th>Annual</th><th>Notes</th></tr>
+                <tr><td>Strategy & Planning</td><td>$48,000</td><td>Upfront + quarterly refresh</td></tr>
+                <tr><td>Media Management</td><td>$144,000</td><td>$12K/mo all channels</td></tr>
+                <tr><td>Creative Services</td><td>$96,000</td><td>$8K/mo retainer</td></tr>
+                <tr><td>Analytics & Reporting</td><td>$36,000</td><td>$3K/mo</td></tr>
+                <tr><td>Account Management</td><td>$24,000</td><td>$2K/mo</td></tr>
+                <tr><td><strong>Total Agency Fees</strong></td><td><strong>$348,000</strong></td><td></td></tr>
+              </table>
+              
+              <h3 data-annotate="s7-media">7.2 Media Investment</h3>
+              <table data-annotate="s7-media-table">
+                <tr><th>Component</th><th>Amount</th></tr>
+                <tr><td>Media Spend</td><td>$2,000,000</td></tr>
+                <tr><td>Media Fee (3%)</td><td>$60,000</td></tr>
+                <tr><td><strong>Total Media</strong></td><td><strong>$2,060,000</strong></td></tr>
+              </table>
+              
+              <h3 data-annotate="s7-total">7.3 Total Annual Investment</h3>
+              <p data-annotate="s7-total-detail"><strong>$2,408,000</strong> (Agency: $348K + Media: $2.06M)</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SECTION 8 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s8-header">8) Case Studies & References</div>
+            <div class="section-body">
+              <div class="case-study" data-annotate="s8-case1">
+                <h4>Case Study 1: Regional Healthcare System</h4>
+                <p><strong>Challenge:</strong> 2,000 nursing hires needed in 12 months across 15 facilities.</p>
+                <p><strong>Solution:</strong> Multi-channel campaign with role-specific creative and ATS integration.</p>
+                <p><strong>Results:</strong> 2,347 hires, 34% under CPA target, 89% SQA rate.</p>
+                <div class="case-study-images">
+                  <img src="images/img-006.png" alt="Healthcare campaign">
+                  <img src="images/img-007.png" alt="Healthcare results">
+                </div>
+              </div>
+              
+              <div class="case-study" data-annotate="s8-case2">
+                <h4>Case Study 2: Manufacturing Conglomerate</h4>
+                <p><strong>Challenge:</strong> Skilled trades shortage in rural Midwest locations.</p>
+                <p><strong>Solution:</strong> CTV + programmatic with relocation messaging; trade school partnerships.</p>
+                <p><strong>Results:</strong> 156% increase in qualified applicants; filled 94% of roles in 6 months.</p>
+                <img src="images/img-008.png" alt="Manufacturing campaign">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SECTION 9 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s9-header">9) Implementation Timeline</div>
+            <div class="section-body">
+              <h3 data-annotate="s9-phases">9.1 Phase Overview</h3>
+              <table data-annotate="s9-phases-table">
+                <tr><th>Phase</th><th>Timeline</th><th>Key Milestones</th></tr>
+                <tr><td>Discovery</td><td>Weeks 1-2</td><td>Stakeholder interviews, data audit, strategy workshop</td></tr>
+                <tr><td>Setup</td><td>Weeks 3-4</td><td>Tracking deployment, account builds, creative kickoff</td></tr>
+                <tr><td>Launch</td><td>Week 5</td><td>Search campaigns live, initial creative deployed</td></tr>
+                <tr><td>Optimize</td><td>Weeks 6-12</td><td>A/B testing, audience refinement, scale decisions</td></tr>
+                <tr><td>Expand</td><td>Weeks 13+</td><td>CTV launch, full-funnel activation</td></tr>
+              </table>
+              
+              <h3 data-annotate="s9-dependencies">9.2 Dependencies</h3>
+              <ul data-annotate="s9-dependencies-list">
+                <li>ATS access for conversion tracking integration</li>
+                <li>Brand guidelines and approved messaging</li>
+                <li>Employee participation for video/photo shoots</li>
+                <li>Legal review of compliance requirements</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SECTION 10 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s10-header">10) Why Figmints</div>
+            <div class="section-body">
+              <h3 data-annotate="s10-diff">10.1 Our Differentiators</h3>
+              <ul data-annotate="s10-diff-list">
+                <li><strong>Recruiting DNA:</strong> TrainHire sub-brand = dedicated expertise</li>
+                <li><strong>Regional Presence:</strong> Providence HQ = labor shed knowledge</li>
+                <li><strong>Performance Mindset:</strong> We optimize to hires, not impressions</li>
+                <li><strong>Defense Experience:</strong> Compliance-ready from day one</li>
+                <li><strong>Agility:</strong> Boutique attention with enterprise capability</li>
+              </ul>
+              
+              <h3 data-annotate="s10-values">10.2 Our Values</h3>
+              <p data-annotate="s10-values-detail">We believe recruiting is relationship-building at scale. Every impression is a brand moment. Every click is a potential colleague. We treat your talent brand with the same care we'd want for our own.</p>
+              
+              <div class="case-study" data-annotate="s10-testimonial">
+                <h4>Client Testimonial</h4>
+                <p><em>"Figmints transformed our recruiting approach. They don't just run ads—they build systems that actually fill roles."</em></p>
+                <p><strong>— VP Talent Acquisition, Fortune 500 Manufacturer</strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SECTION 11 -->
+        <div class="page">
+          <div class="section">
+            <div class="section-header" data-annotate="s11-header">11) Appendix</div>
+            <div class="section-body">
+              <h3 data-annotate="s11-certifications">11.1 Certifications & Partnerships</h3>
+              <ul data-annotate="s11-cert-list">
+                <li>Google Premier Partner</li>
+                <li>Meta Business Partner</li>
+                <li>LinkedIn Marketing Partner</li>
+                <li>The Trade Desk Certified</li>
+                <li>HubSpot Solutions Partner</li>
+              </ul>
+              
+              <h3 data-annotate="s11-tools">11.2 Technology Stack</h3>
+              <table data-annotate="s11-tools-table">
+                <tr><th>Category</th><th>Tools</th></tr>
+                <tr><td>Analytics</td><td>GA4, Looker Studio, Tableau</td></tr>
+                <tr><td>Tag Management</td><td>GTM (Client + Server)</td></tr>
+                <tr><td>Attribution</td><td>Triple Whale, Northbeam</td></tr>
+                <tr><td>Creative</td><td>Figma, Adobe Creative Suite</td></tr>
+                <tr><td>Project Management</td><td>Asana, Slack</td></tr>
+              </table>
+              
+              <h3 data-annotate="s11-contact">11.3 Contact Information</h3>
+              <p data-annotate="s11-contact-detail">
+                <strong>Figmints Digital Creative Marketing</strong><br>
+                166 Valley St, Suite 6M103<br>
+                Providence, RI 02909<br>
+                info@figmints.com | 401.214.6986<br>
+                www.figmints.com | www.trainhire.com
+              </p>
+            </div>
+          </div>
+        </div>
+        
       </div>
-      
     </div>
     
-    <!-- SIDEBAR -->
     <div class="sidebar">
-      <div class="sidebar-header">📝 All Comments</div>
-      <div class="sidebar-content" id="sidebar-list"></div>
+      <div class="sidebar-header">📝 Change Requests</div>
+      <div class="sidebar-content" id="sidebar-list">
+        <div class="sidebar-empty">Hover over any text and click <strong>+</strong> in the margin to add a note.</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Comment Modal -->
+  <div class="comment-modal" id="modal">
+    <div class="comment-box">
+      <div class="comment-box-header" id="modal-title">Add Note</div>
+      <div class="comment-box-body">
+        <textarea id="modal-text" placeholder="Enter your note..."></textarea>
+        <div class="comment-box-btns">
+          <button class="btn-delete" id="modal-delete" onclick="deleteNote()" style="display:none">Delete</button>
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn-save" onclick="saveNote()">Save</button>
+        </div>
+      </div>
     </div>
   </div>
   
   <script>
-    let comments = JSON.parse(localStorage.getItem('eb-rfp-v4') || '{}');
+    let notes = JSON.parse(localStorage.getItem('eb-rfp-v5') || '{}');
+    let currentId = null;
+    let hoveredEl = null;
     
+    const gutter = document.getElementById('gutter');
+    const floatingBtn = document.getElementById('floatingBtn');
+    const doc = document.getElementById('doc');
+    const modal = document.getElementById('modal');
+    
+    // Initialize
     window.onload = function() {
-      renderAll();
+      renderMarkers();
+      renderSidebar();
+      setupHoverTracking();
     };
     
-    function openInput(btn) {
-      // Close any other open inputs
-      document.querySelectorAll('.comment-input-wrap.active').forEach(el => el.classList.remove('active'));
-      
-      const zone = btn.closest('.comment-zone');
-      const inputWrap = zone.querySelector('.comment-input-wrap');
-      const textarea = inputWrap.querySelector('textarea');
-      
-      // Load existing comment if any
-      const id = zone.dataset.id;
-      textarea.value = comments[id] || '';
-      
-      inputWrap.classList.add('active');
-      textarea.focus();
-    }
-    
-    function saveComment(btn) {
-      const zone = btn.closest('.comment-zone');
-      const id = zone.dataset.id;
-      const text = zone.querySelector('textarea').value.trim();
-      
-      if (text) {
-        comments[id] = text;
-      } else {
-        delete comments[id];
-      }
-      
-      localStorage.setItem('eb-rfp-v4', JSON.stringify(comments));
-      zone.querySelector('.comment-input-wrap').classList.remove('active');
-      renderAll();
-    }
-    
-    function cancelComment(btn) {
-      btn.closest('.comment-input-wrap').classList.remove('active');
-    }
-    
-    function deleteComment(id) {
-      delete comments[id];
-      localStorage.setItem('eb-rfp-v4', JSON.stringify(comments));
-      renderAll();
-    }
-    
-    function clearAll() {
-      if (confirm('Clear all comments?')) {
-        comments = {};
-        localStorage.setItem('eb-rfp-v4', JSON.stringify(comments));
-        renderAll();
-      }
-    }
-    
-    function renderAll() {
-      // Update zones
-      document.querySelectorAll('.comment-zone').forEach(zone => {
-        const id = zone.dataset.id;
-        const existing = zone.querySelector('.inline-comment');
-        if (existing) existing.remove();
-        
-        if (comments[id]) {
-          zone.classList.add('has-comment');
-          zone.querySelector('.add-comment-btn').textContent = '✎';
-          
-          const commentEl = document.createElement('div');
-          commentEl.className = 'inline-comment';
-          commentEl.innerHTML = `
-            <div class="comment-text">${comments[id]}</div>
-            <div class="edit-btns">
-              <button onclick="openInput(this.closest('.comment-zone').querySelector('.add-comment-btn'))">Edit</button>
-              <button onclick="deleteComment('${id}')">Delete</button>
-            </div>
-          `;
-          zone.appendChild(commentEl);
-        } else {
-          zone.classList.remove('has-comment');
-          zone.querySelector('.add-comment-btn').textContent = '+';
+    // Track hover over annotatable elements
+    function setupHoverTracking() {
+      doc.addEventListener('mousemove', (e) => {
+        const el = e.target.closest('[data-annotate]');
+        if (el && el !== hoveredEl) {
+          hoveredEl = el;
+          positionFloatingBtn(el);
         }
       });
       
-      // Update sidebar
-      const sidebar = document.getElementById('sidebar-list');
-      const entries = Object.entries(comments);
+      doc.addEventListener('mouseleave', () => {
+        hoveredEl = null;
+        floatingBtn.classList.remove('visible');
+      });
       
-      if (entries.length === 0) {
-        sidebar.innerHTML = '<div class="sidebar-empty">No comments yet.<br><br>Click the <strong>+</strong> button next to any section to add a comment.</div>';
-      } else {
-        sidebar.innerHTML = entries.map(([id, text]) => {
-          const zone = document.querySelector(`[data-id="${id}"]`);
-          const heading = zone ? (zone.querySelector('h3, h4')?.textContent || 'Section') : id;
-          return `
-            <div class="sidebar-item" onclick="scrollTo('${id}')">
-              <div class="loc">📍 ${heading}</div>
-              <div>${text}</div>
-            </div>
-          `;
-        }).join('');
-      }
+      floatingBtn.addEventListener('click', () => {
+        if (hoveredEl) {
+          openModal(hoveredEl.dataset.annotate);
+        }
+      });
     }
     
-    function scrollTo(id) {
-      const el = document.querySelector(`[data-id="${id}"]`);
+    // Position floating button in gutter
+    function positionFloatingBtn(el) {
+      const elRect = el.getBoundingClientRect();
+      const gutterRect = gutter.getBoundingClientRect();
+      const top = elRect.top + elRect.height / 2 - gutterRect.top + gutter.scrollTop;
+      
+      floatingBtn.style.top = top + 'px';
+      floatingBtn.classList.add('visible');
+      
+      // Show edit icon if note exists
+      const id = el.dataset.annotate;
+      floatingBtn.textContent = notes[id] ? '✎' : '+';
+    }
+    
+    // Render note markers in gutter
+    function renderMarkers() {
+      // Remove old markers
+      gutter.querySelectorAll('.note-marker').forEach(m => m.remove());
+      
+      // Add markers for each note
+      Object.keys(notes).forEach(id => {
+        const el = document.querySelector(`[data-annotate="${id}"]`);
+        if (el) {
+          el.classList.add('has-note');
+          
+          const marker = document.createElement('div');
+          marker.className = 'note-marker';
+          marker.textContent = '✎';
+          marker.onclick = () => openModal(id);
+          
+          // Position will be set after layout
+          setTimeout(() => {
+            const elRect = el.getBoundingClientRect();
+            const gutterRect = gutter.getBoundingClientRect();
+            marker.style.top = (elRect.top + elRect.height / 2 - gutterRect.top + gutter.scrollTop) + 'px';
+          }, 10);
+          
+          gutter.appendChild(marker);
+        }
+      });
+      
+      // Clear has-note from elements without notes
+      document.querySelectorAll('[data-annotate].has-note').forEach(el => {
+        if (!notes[el.dataset.annotate]) {
+          el.classList.remove('has-note');
+        }
+      });
+    }
+    
+    // Open modal
+    function openModal(id) {
+      currentId = id;
+      const text = notes[id] || '';
+      
+      document.getElementById('modal-text').value = text;
+      document.getElementById('modal-title').textContent = text ? 'Edit Note' : 'Add Note';
+      document.getElementById('modal-delete').style.display = text ? 'inline-block' : 'none';
+      
+      modal.classList.add('active');
+      document.getElementById('modal-text').focus();
+    }
+    
+    function closeModal() {
+      modal.classList.remove('active');
+      currentId = null;
+    }
+    
+    function saveNote() {
+      const text = document.getElementById('modal-text').value.trim();
+      
+      if (text) {
+        notes[currentId] = text;
+      } else {
+        delete notes[currentId];
+      }
+      
+      localStorage.setItem('eb-rfp-v5', JSON.stringify(notes));
+      closeModal();
+      renderMarkers();
+      renderSidebar();
+    }
+    
+    function deleteNote() {
+      delete notes[currentId];
+      localStorage.setItem('eb-rfp-v5', JSON.stringify(notes));
+      closeModal();
+      renderMarkers();
+      renderSidebar();
+    }
+    
+    // Render sidebar
+    function renderSidebar() {
+      const sidebar = document.getElementById('sidebar-list');
+      const entries = Object.entries(notes);
+      
+      if (entries.length === 0) {
+        sidebar.innerHTML = '<div class="sidebar-empty">Hover over any text and click <strong>+</strong> in the margin to add a note.</div>';
+        return;
+      }
+      
+      sidebar.innerHTML = entries.map(([id, text]) => {
+        const el = document.querySelector(`[data-annotate="${id}"]`);
+        let label = id;
+        
+        if (el) {
+          // Try to get meaningful label
+          const heading = el.closest('.section-body')?.querySelector('h3')?.textContent ||
+                         el.closest('.section')?.querySelector('.section-header')?.textContent ||
+                         el.textContent.slice(0, 30);
+          label = heading;
+        }
+        
+        return `
+          <div class="sidebar-item" onclick="scrollToNote('${id}')">
+            <div class="loc">📍 ${label}</div>
+            <div>${text}</div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function scrollToNote(id) {
+      const el = document.querySelector(`[data-annotate="${id}"]`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         el.style.outline = '3px solid var(--yellow)';
         setTimeout(() => el.style.outline = '', 2000);
+      }
+    }
+    
+    function clearAll() {
+      if (confirm('Clear all notes?')) {
+        notes = {};
+        localStorage.setItem('eb-rfp-v5', JSON.stringify(notes));
+        renderMarkers();
+        renderSidebar();
       }
     }
     
@@ -922,7 +1030,7 @@
           jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
           pagebreak: { mode: 'css', before: '.page' }
         })
-        .from(document.getElementById('doc'))
+        .from(doc)
         .save()
         .then(() => document.body.classList.remove('pdf-mode'))
         .catch(() => {
@@ -930,6 +1038,19 @@
           alert('Try Cmd+P to print as PDF instead.');
         });
     }
+    
+    // Close modal on escape or outside click
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+    
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    
+    // Reposition markers on scroll/resize
+    window.addEventListener('resize', renderMarkers);
+    window.addEventListener('scroll', renderMarkers);
   </script>
 </body>
 </html>
