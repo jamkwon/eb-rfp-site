@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figmints RFP - General Dynamics Electric Boat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a1a2e;
+      --accent: #e63946;
+      --text: #2d3436;
+      --light: #f8f9fa;
+      --border: #dee2e6;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: #fff;
+    }
+    
+    .container {
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0.5in;
+    }
+    
+    /* Cover Page */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    .cover-image {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+    
+    .cover-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .cover-title h1 {
+      font-size: 1.5rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .cover-title h2 {
+      font-size: 2rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-top: 0.25rem;
+    }
+    
+    .cover-contact {
+      text-align: right;
+      font-size: 0.875rem;
+      color: #666;
+    }
+    
+    .cover-contact strong {
+      color: var(--primary);
+      display: block;
+      font-size: 1rem;
+    }
+    
+    .welcome-section {
+      background: var(--light);
+      padding: 2rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+    
+    .welcome-section h3 {
+      color: var(--accent);
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .signature {
+      margin-top: 2rem;
+      font-style: italic;
+    }
+    
+    .signature strong {
+      display: block;
+      font-style: normal;
+      margin-top: 0.5rem;
+    }
+    
+    /* Section Styles */
+    .section {
+      margin-top: 2rem;
+    }
+    
+    .section-header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px 8px 0 0;
+      margin-bottom: 0;
+    }
+    
+    .section-header h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    .section-content {
+      background: var(--light);
+      padding: 1.5rem;
+      border-radius: 0 0 8px 8px;
+      border: 1px solid var(--border);
+      border-top: none;
+    }
+    
+    h3 {
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin: 1.5rem 0 0.75rem;
+      font-weight: 600;
+    }
+    
+    h3:first-child {
+      margin-top: 0;
+    }
+    
+    h4 {
+      color: var(--accent);
+      font-size: 1rem;
+      margin: 1.25rem 0 0.5rem;
+      font-weight: 600;
+    }
+    
+    p {
+      margin-bottom: 0.75rem;
+    }
+    
+    ul, ol {
+      margin-left: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    li {
+      margin-bottom: 0.25rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    
+    th {
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+    
+    tr:nth-child(even) {
+      background: #f1f3f4;
+    }
+    
+    /* Case Studies */
+    .case-study {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .case-study h4 {
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-top: 0;
+    }
+    
+    .case-study-images {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .case-study-images img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .case-study-image-single {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 1rem 0;
+    }
+    
+    /* Changes Section */
+    .changes-section {
+      background: #fff3cd;
+      border: 2px dashed #ffc107;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .changes-section h2 {
+      color: #856404;
+      margin-bottom: 1rem;
+    }
+    
+    .changes-section textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 1rem;
+      border: 1px solid #ffc107;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+    }
+    
+    .changes-list {
+      list-style: none;
+      margin-left: 0;
+    }
+    
+    .changes-list li {
+      padding: 0.5rem;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .changes-list li:last-child {
+      border-bottom: none;
+    }
+    
+    /* Print Styles */
+    @media print {
+      body {
+        font-size: 11pt;
+      }
+      
+      .container {
+        max-width: 100%;
+        padding: 0;
+      }
+      
+      .page-break {
+        page-break-before: always;
+      }
+      
+      .no-break {
+        page-break-inside: avoid;
+      }
+      
+      .section {
+        page-break-inside: avoid;
+      }
+      
+      .case-study {
+        page-break-inside: avoid;
+      }
+      
+      img {
+        page-break-inside: avoid;
+        max-width: 100%;
+      }
+      
+      table {
+        page-break-inside: avoid;
+      }
+      
+      .section-header, .section-content {
+        break-inside: avoid;
+      }
+      
+      .changes-section {
+        page-break-before: always;
+      }
+      
+      .no-print {
+        display: none !important;
+      }
+      
+      @page {
+        margin: 0.75in;
+        size: letter;
+      }
+    }
+    
+    /* Edit Mode Toggle */
+    .edit-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      z-index: 1000;
+    }
+    
+    .edit-toggle:hover {
+      background: #c62828;
+    }
+    
+    [contenteditable="true"] {
+      outline: 2px dashed var(--accent);
+      outline-offset: 4px;
+    }
+    
+    @media print {
+      .edit-toggle {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="edit-toggle no-print" onclick="toggleEdit()">✏️ Edit Mode</button>
+  
+  <div class="container">
+    <!-- COVER PAGE -->
+    <div class="cover">
+      <img src="images/img-000.png" alt="Cover" class="cover-image">
+      
+      <div class="cover-header">
+        <div class="cover-title">
+          <h1>General Dynamics Electric Boat</h1>
+          <h2>Request for Proposal - Marketing Services</h2>
+        </div>
+        <div class="cover-contact">
+          <strong>Figmints Digital Creative Marketing</strong>
+          info@figmints.com<br>
+          401.214.6986, Figmints.com<br>
+          166 Valley St 6M103, Providence, RI 02909
+        </div>
+      </div>
+      
+      <div class="welcome-section">
+        <h3>WELCOME!</h3>
+        <p>Dear Ms. Chiaradio,</p>
+        <p>Electric Boat isn't "just hiring." You're running a national-scale talent acquisition campaign with two hard constraints: regional labor-shed reality (CT/RI/MA) and defense-sector expectations where sloppy media and sloppy messaging are unacceptable. That's exactly where most agencies get exposed.</p>
+        <p>Figmints is a digital performance agency, and we operate a hiring-focused sub-brand, TrainHire (trainhire.com), built on one thesis: hiring is marketing—and the winners treat it like a measurable system, not a pile of requisitions.</p>
+        <p>When we posted one role and got hundreds of applicants, we didn't drown in resumes—we rebuilt the workflow: tighter qualification gates, faster screening, and cleaner "candidate conversion" so the process stayed fast, fair, and repeatable. That's the mindset we bring to EB: disciplined media execution, measurable hiring economics, and conversion optimization from awareness → apply-complete → hire.</p>
+        <p>We're submitting because EB's scope matches how we operate at our best:</p>
+        <ul>
+          <li>Performance-first media (Search + Programmatic + CTV + selective traditional) managed to CPA → SQA → CPH, not vanity metrics.</li>
+          <li>Story-driven recruiting creative that respects real audiences (trades, engineers, veterans, early talent) without hype.</li>
+          <li>Conversion + tracking governance you can trust at the level you need: market, role family, funnel step.</li>
+          <li>Defense-ready operating posture: brand safety controls, OFCCP/EEO-aware ad practices, ADA/508 considerations, and ITAR-aware review habits.</li>
+        </ul>
+        <p>If selected, we'll move fast: validate assumptions, launch in phases, and optimize continuously—working in lockstep with EB recruiting + marketing teams (including your in-house social program).</p>
+        <div class="signature">
+          Cheers,
+          <strong>James Kwon<br>Figmints Digital Marketing & Design Services/TrainHire, Founder & CEO</strong>
+        </div>
+      </div>
+    </div>
+    
+    <!-- SECTION 1: MEDIA PLAN -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>1) Media Plan + Strategic Mix Recommendations</h2>
+      </div>
+      <div class="section-content">
+        <p>Will run this like performance marketing: capture intent (Search), recover drop-off (retargeting), and use awareness (CTV / optional OOH) only when it proves downstream lift.</p>
+        
+        <h3>1.1 Optimization Objective</h3>
+        <p>Will run this like performance marketing: capture intent (Search), recover drop-off (retargeting), and use awareness (CTV / optional OOH) only when it proves downstream lift.</p>
+        
+        <h3>1.2 KPI Hierarchy</h3>
+        <p>Our proposed metric priority hierarchy is:</p>
+        <ol>
+          <li><strong>Cost-per-Hire (CPH).</strong> This is the true measure of success: how efficiently media investment turns into actual hires.</li>
+          <li><strong>Screening-Qualified Applicant rate (SQA).</strong> This measures how many applicants meet baseline qualifications.</li>
+          <li><strong>Cost-per-Application (CPA).</strong> CPA tells us how efficiently we are generating applicants, but it must be evaluated alongside quality (SQA), not in isolation.</li>
+          <li><strong>Application completion rate.</strong> This indicates whether candidates who show intent can complete the application process without friction.</li>
+          <li><strong>Reach, frequency, and awareness.</strong> These metrics help us understand whether employer messaging is reaching enough people.</li>
+        </ol>
+        
+        <h3>1.3 Guardrails to Prevent Budget Fragmentation</h3>
+        <p>We will start with the smallest set of channels that reliably produce a qualified applicant flow, then expand only when it compounds results. Protect Search + retargeting first. Flight awareness; don't "always-on" it out of habit.</p>
+        
+        <h3>1.4 Our Digital-First $2M Recommended Allocation</h3>
+        <table class="no-break">
+          <thead>
+            <tr>
+              <th>Channel</th>
+              <th>%</th>
+              <th>Annual</th>
+              <th>Primary Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Google Search</td>
+              <td>45%</td>
+              <td>$900,000</td>
+              <td>High-intent capture</td>
+            </tr>
+            <tr>
+              <td>Programmatic (prospecting + retargeting)</td>
+              <td>30%</td>
+              <td>$600,000</td>
+              <td>Conversion lift + reinforcement</td>
+            </tr>
+            <tr>
+              <td>CTV (flighted)</td>
+              <td>10%</td>
+              <td>$200,000</td>
+              <td>Trust + mission awareness (measured by lift)</td>
+            </tr>
+            <tr>
+              <td>Paid Social (limited)</td>
+              <td>5%</td>
+              <td>$100,000</td>
+              <td>Role-specific amplification + retargeting support</td>
+            </tr>
+            <tr>
+              <td>Optimization Reserve / Flex</td>
+              <td>10%</td>
+              <td>$200,000</td>
+              <td>Scale winners + fund controlled tests (incl. optional OOH)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><em>Note: Out-of-Home is not included as a default line item because it is the least attributable. If used, it will be funded from the Optimization Reserve as a structured test (details in Section 4).</em></p>
+        
+        <h3>1.5 Channel Mix Rationale</h3>
+        <p>Each channel will play a defined role in moving candidates from awareness to application while keeping CPA at bay and applicant quality at its highest.</p>
+        <ul>
+          <li><strong>Search:</strong> primary acquisition engine; structured by role family + labor shed; tight query control.</li>
+          <li><strong>Programmatic retargeting (always-on):</strong> recover high intent; often the fastest CPA stabilizer.</li>
+          <li><strong>Programmatic prospecting (controlled):</strong> Reinforce hook in priority sheds; measured by downstream impact.</li>
+          <li><strong>CTV (flighted):</strong> earns its keep via branded search lift + retargeting pool growth + CPA stabilization.</li>
+          <li><strong>Paid social (limited):</strong> LinkedIn for engineering credibility; Meta for veteran/transition + retargeting support.</li>
+        </ul>
+        
+        <h3>1.6 Sequencing</h3>
+        <ul>
+          <li><strong>Weeks 1–4:</strong> Search launch + always-on retargeting + tracking baseline (apply-start/apply-complete).</li>
+          <li><strong>Weeks 5–12:</strong> scale winners; introduce controlled prospecting; CTV only once conversion paths + measurement are stable.</li>
+          <li><strong>Quarterly:</strong> refresh creative; keep/change/reallocate awareness based on measurable lift.</li>
+        </ul>
+        
+        <h3>1.7 Delivery Standards</h3>
+        <ul>
+          <li>CTV flights: frequency 3–6/month/HH; 6–8 weeks.</li>
+          <li>Programmatic prospecting: 2–4 impressions/user/week.</li>
+          <li>Retargeting: 3–6/week initially; taper.</li>
+          <li>Search: intent coverage + strict negatives + market caps.</li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- SECTION 2: ADWORDS -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>2) AdWords Strategy & Structure</h2>
+      </div>
+      <div class="section-content">
+        <h3>2.1 Role of Search</h3>
+        <p>Most accountable channel for recruiting outcomes; managed to CPA + SQA, with CPH where ATS supports.</p>
+        
+        <h3>2.2 Keyword Methodology</h3>
+        <p>We structure campaigns around how candidates search, not internal requisition language. Keyword selection and expansion will be driven by:</p>
+        <ul>
+          <li><strong>Role-family clusters:</strong> trades/engineering/early talent/veterans</li>
+          <li><strong>Labor-shed modifiers:</strong> Groton/New London; Quonset/Newport; selective MA spillover</li>
+          <li><strong>Pathway terms:</strong> apprenticeship, certification, SkillBridge, entry-level</li>
+          <li><strong>Search term mining:</strong> (exclude low-intent "research only" searches when they inflate CPA without hires)</li>
+        </ul>
+        
+        <h3>2.3 Account Segmentation</h3>
+        <p>We will segment Search campaigns to create budget discipline and clear insights. Core segmentation will include:</p>
+        <ul>
+          <li>Role family (primary)</li>
+          <li>Geography by labor shed: Zone A (0–30mi), Zone B (30–60mi), Zone C (60+ role-dependent)</li>
+          <li>Intent tiers: job-now vs pathway vs brand/navigational</li>
+        </ul>
+        
+        <h3>2.4 Query Hygiene (Protect CPA + Brand)</h3>
+        <p>Recruiting search fails when query matching gets lazy. We prevent wasted spend and brand risk with strict controls:</p>
+        <ul>
+          <li>Exact/Phrase first; Broad only with strong guardrails</li>
+          <li>Aggressive negatives by role family</li>
+          <li>Weekly audits to block irrelevant spikes and reduce reputational adjacency risk</li>
+        </ul>
+        
+        <h3>2.5 Bidding & Budget Governance</h3>
+        <p>We will use bid strategies appropriate to maturity and data integrity:</p>
+        <ul>
+          <li><strong>Phase 1:</strong> conservative bidding + tight geo/match constraints to establish true CPA + quality</li>
+          <li><strong>Phase 2:</strong> scale by role family/labor shed based on CPA + SQA + apply-complete</li>
+        </ul>
+        <p>Market-level budget caps prevent overspend in highly competitive areas until applicant quality is proven. Role-family guardrails ensure skilled trades budgets are protected from engineering CPC inflation (and vice versa), maintaining balance and predictability across hiring priorities.</p>
+        
+        <h3>2.6 Directional Ranges</h3>
+        <p>These are directional operating ranges, based on Northeast manufacturing/defense recruiting benchmarks and competitive dynamics. Final ranges will be calibrated after the first 30 days of live data.</p>
+        <ul>
+          <li>Trades CPC: ~$6–$15</li>
+          <li>Engineering CPC: ~$12–$35+</li>
+          <li>Trades CPA: ~$75–$150</li>
+          <li>Engineering CPA: ~$150–$300</li>
+          <li>Cleared-adjacent (if applicable): ~$250–$500</li>
+        </ul>
+        
+        <h3>2.7 Conversion-Path Alignment</h3>
+        <p>Search performance is heavily influenced by what happens after the click. We align keywords to role-specific landing paths—trades, engineering, veterans, and early talent—so candidates arrive at content that matches their intent and readiness.</p>
+        <p>Landing pages alignment is continuously optimized based on apply-start to apply-complete rates, funnel drop-off signals, and screening-qualified applicant (SQA) quality to ensure search traffic converts efficiently into qualified applicants.</p>
+        
+        <h3>2.8 Cadence</h3>
+        <p>We'll manage Search performance with a cadence built for both speed and accountability.</p>
+        <ul>
+          <li><strong>Daily:</strong> pacing + CPA volatility + conversion integrity</li>
+          <li><strong>Weekly:</strong> terms/negatives + bids/budgets + copy tests + landing alignment</li>
+          <li><strong>Monthly:</strong> decision-grade report + reallocations</li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- SECTION 3: TRADITIONAL & BROADCAST -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>3) Traditional & Broadcast Media</h2>
+      </div>
+      <div class="section-content">
+        <h3>3.1 Purpose and Role in the Full Recruiting System</h3>
+        <p>Programmatic Display and Connected TV (OTT/CTV) are not "extra channels." They solve two problems Search alone cannot:</p>
+        <ol>
+          <li>Demand creation and trust-building in competitive labor markets (CTV + prospecting)</li>
+          <li>Conversion lift after a candidate shows intent but doesn't complete an application (retargeting)</li>
+        </ol>
+        <p>Together, they reduce wasted spend by improving apply-start → apply-complete, stabilizing CPA, and increasing the likelihood that candidates who convert are aligned with EB's mission and expectations.</p>
+        <p>Traditional and broadcast channels play a supporting—but critical—role in Electric Boat's recruitment media ecosystem. Their purpose is not direct conversion, but to improve awareness, message frequency, and lower CPA rates in a highly competitive market.</p>
+        
+        <h3>3.2 Targeting Approach</h3>
+        <p>Our targeting approach includes:</p>
+        <ul>
+          <li>Geo + contextual + first-party (core)</li>
+          <li>Modeled/lookalike only after data maturity</li>
+          <li>Zone A/B/C delivery model for budget discipline</li>
+        </ul>
+        
+        <h3>3.3 Programmatic Execution</h3>
+        <p>The purpose of this program is to build familiarity and preference inside priority labor sheds and role families so EB is not competing only on "who bids highest on Search." To do that, we will do the following:</p>
+        <ul>
+          <li><strong>Prospecting:</strong> PMPs/high-quality exchanges; role-family creative; CTA matched to stage.</li>
+          <li><strong>Retargeting (always-on):</strong> job viewers + apply-starts (where available) + engaged users; sequence 0–3 / 4–14 / 15–30 days; drive to the most relevant path, not the careers homepage.</li>
+        </ul>
+        
+        <h3>3.4 CTV Execution</h3>
+        <p>CTV is used as a flighted awareness lever in priority labor sheds, not an always-on channel. We run regional OTT/CTV in 15–30s formats to build familiarity and trust that improves downstream performance in Search and retargeting.</p>
+        <p>CTV is retained or scaled only if it shows measurable impact: lift in branded/role-based search, growth in retargeting pools, and improved CPA stability in exposed markets.</p>
+        
+        <h3>3.5 Reporting (Downstream, Not Last-Click)</h3>
+        <p>Because CTV rarely converts directly, performance is evaluated through downstream signals, including CPA trends in exposed vs. non-exposed markets, apply-complete lift among retargeted users, branded and role-based search lift during/after flights, and changes in retargeting pool size and conversion rates.</p>
+      </div>
+    </div>
+    
+    <!-- SECTION 4: OOH -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>4) Out-of-Home (OOH) Strategy (Test-Based)</h2>
+      </div>
+      <div class="section-content">
+        <h3>4.1 Role</h3>
+        <p>Out-of-Home is the least directly attributable channel in the mix. For that reason, we do not recommend OOH as a primary driver of applications. If used, OOH serves one job: reinforce the campaign hook and mission story in the highest-probability commuter corridors, increasing recall and improving downstream digital performance (branded search, retargeting efficiency, and CPA stability).</p>
+        
+        <h3>4.2 Corridors (Tight, High-Signal)</h3>
+        <p>We recommend focusing only on corridors with the highest likelihood of reaching EB's priority skilled trades labor sheds—avoiding the "big footprint, low signal" trap.</p>
+        <ul>
+          <li><strong>CT:</strong> I-95 and select Route 1 units tied to Groton/New London commuting</li>
+          <li><strong>RI:</strong> Route 4 (Quonset access), selective I-95, and Newport bridge approaches where relevant</li>
+          <li><strong>MA:</strong> only if digital data proves meaningful candidate flow from specific pockets</li>
+        </ul>
+        
+        <h3>4.3 Flighting</h3>
+        <p>1–2 flights/year, 6–8 weeks. Pair with increased branded/role Search coverage + modest retargeting intensity in exposed sheds (optionally align with a CTV flight).</p>
+        
+        <h3>4.4 Planning Ranges + Test Budget</h3>
+        <p>OOH will be deployed in short, disciplined flights aligned to Electric Boat's skilled-trades hiring surges and apprenticeship or early-talent cycles, rather than as an always-on channel. This approach ensures spend supports awareness only when it meaningfully compounds downstream performance.</p>
+        <ul>
+          <li>Static bulletin (4 wks): ~$4k–$15k; 250k–1.2M imps; CPM ~$5–$20</li>
+          <li>Digital bulletin (4 wks): ~$8k–$25k; 300k–1.5M imps; CPM ~$8–$25</li>
+          <li>Test flight budget: $150k–$350k depending on unit mix and duration</li>
+        </ul>
+        <p>All placements will be supported by a vendor-backed board list and presented to Electric Boat for review and approval prior to any media commitment.</p>
+        
+        <h3>4.5 Measurement</h3>
+        <p>OOH is evaluated strictly on downstream impact, including lift in branded and role-based search within exposed markets, increases in direct and organic traffic to career paths, CPA stability, and apply-complete improvements during flight windows, and growth and conversion performance of retargeting pools.</p>
+      </div>
+    </div>
+    
+    <!-- SECTION 5: CASE STUDIES -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>5) Case Studies</h2>
+      </div>
+      <div class="section-content">
+        
+        <div class="case-study no-break">
+          <h4>Papitto Opportunity Connection, TransformRI Campaign</h4>
+          <p>In the memory of Ralph Papitto, his wife Barbara wanted to do something extraordinary to make a lasting difference in the Rhode Island Community. The goal, dedicate over $100M to BIPOC efforts in RI.</p>
+          
+          <p><strong>THE OPPORTUNITY:</strong></p>
+          <p>A challenge was made to Rhode Island High Schoolers to dream what can be done with $1 Million to positively impact the BIPOC community in Rhode Island. The winner would get a $10k scholarship, but here's the kicker – the best ideas got funded! That's right – the Papitto Opportunity Connection would give $1M to the high schooler with the best idea. Now, all we need is a campaign to tell the world about it.</p>
+          
+          <p><strong>APPROACH:</strong></p>
+          <p>Our creative process always starts with helping to craft the right story. Our campaign development process takes that story and comes up with creative ways to tell it so that it can be heard. During the brainstorming process, we wanted to bring the BIPOC voice to the center stage. For TransformRI, it was through the delivery of spoken word. Our team developed the script, produced the video, as well as create the interactive designs that would get in front of the exact right audience.</p>
+          
+          <div class="case-study-images">
+            <img src="images/img-007.png" alt="TransformRI Campaign" style="max-width: 48%;">
+            <img src="images/img-008.png" alt="POC Website" style="max-width: 48%;">
+          </div>
+          
+          <p><strong>RESULTS:</strong></p>
+          <p>The campaign had a significant impact on the audience, raising awareness and engagement within the community. Our work facilitated partnerships with like-minded organizations and expanded the community network. The success of this campaign led to a continued partnership with the foundation, and we currently work with them on a monthly basis, providing strategy, continued messaging, and ongoing web support.</p>
+          <p>Not only were we able to secure a wide variety of applications from Rhode Island High Schoolers, in conjunction with The Perry Group, New Flavor, and ITB, we won the <strong>2022 PRSA Silver Anvil Award</strong> for exceptional campaign in the Non-profit category.</p>
+          
+          <img src="images/img-009.png" alt="PRSA Silver Anvil Award" class="case-study-image-single" style="max-width: 100%;">
+          
+          <p><strong>PROJECT DELIVERABLES:</strong></p>
+          <ul>
+            <li><strong>Branding:</strong> Developed a cohesive brand identity and logo that represents POC's mission.</li>
+            <li><strong>Messaging:</strong> Created impactful messaging to communicate the organization's goals and benefits.</li>
+            <li><strong>Website:</strong> Built an informative and engaging website.</li>
+            <li><strong>Web Design & Development:</strong> Developed a user-friendly interface and robust backend.</li>
+            <li><strong>UI/UX:</strong> Ensured a seamless user experience across all devices.</li>
+          </ul>
+        </div>
+        
+        <div class="case-study no-break page-break">
+          <h4>Siren Marine - www.sirenmarine.com</h4>
+          
+          <p><strong>PROBLEM:</strong></p>
+          <p>This small Rhode Island start up has an ace up its sleeve – the very first "connected boat" technology on the market. It's a shame that the company still looks like they belong in a silicon valley garage instead of the spotlight.</p>
+          
+          <p><strong>SOLUTION:</strong></p>
+          <p>Figmints came alongside the founding partners of the company while it was a fledgling startup, and helped grow the company to become one of the tech darlings of the RI startup scene. We achieved a new look & feel that made the company fit in the category, and tell a story through web, graphics, video, and marketing that helped move the needle.</p>
+          
+          <img src="images/img-013.png" alt="Siren Marine Website" class="case-study-image-single">
+          
+          <p><strong>RESULTS:</strong></p>
+          <p>Siren Marine can now launch and track ROI on its digital marketing campaigns and has more visibility over all segments of its site. The rebranding played a large part in helping the company get one of their most important deals in growth – <strong>Shelf space at the largest marine retailer in the country, West Marine.</strong></p>
+        </div>
+        
+        <div class="case-study no-break">
+          <h4>CCL & Homescapes - www.capecodlumber.com</h4>
+          
+          <p><strong>PROBLEM:</strong></p>
+          <p>Cape Cod Lumber is one of the largest regional building supply retailers in the Boston / South Shore area. They would like to expand brand awareness of CCL's new HomeScapes showroom and increase foot traffic of homeowners, interior designers, and architects into the showroom within the Boston MetroWest and South Shore communities.</p>
+          
+          <p><strong>PLAN OF ATTACK:</strong></p>
+          <p>Figmints has executed multiple content marketing campaigns over the past 14 months focused on two of their personas; homeowners and professionals. This included digital, PR, print and social marketing efforts.</p>
+          
+          <p><strong>RESULTS:</strong></p>
+          <p>They have seen a <strong>20% increase in retail/showroom traffic</strong> over the course of first year resulting in a <strong>40% increase in kitchen product sales</strong>. CCL has extended their engagement with Figmints and increased scope to focus on additional activities outside of the existing plan.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- SECTION 6: MEASUREMENT -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>6) Measurement & Analytics</h2>
+      </div>
+      <div class="section-content">
+        <h3>6.1 Measurement Philosophy</h3>
+        <p>Electric Boat's recruiting media should be managed like a performance system tied to hiring outcomes—not a collection of channel metrics. We treat Cost-per-Application (CPA) as a leading indicator, Screening-Qualified Applicant rate (SQA) as the quality guardrail, and Cost-per-Hire (CPH) as the north-star outcome where ATS data allows.</p>
+        
+        <h3>6.2 Dashboard Views (Decision-Grade)</h3>
+        <p>We will report at the level EB needs to make decisions: role family × labor shed × funnel stage.</p>
+        <ul>
+          <li><strong>Executive:</strong> spend, blended CPA, SQA trend, apply-complete, top markets/roles, actions</li>
+          <li><strong>Role family:</strong> trades vs engineering vs veterans vs early talent</li>
+          <li><strong>Labor shed:</strong> Zone A/B/C and corridor insights (where applicable)</li>
+          <li><strong>Channel contribution:</strong> Search, programmatic, CTV, social</li>
+          <li><strong>Testing log:</strong> what changed / what we learned / what's next</li>
+        </ul>
+        
+        <h4>6.2.1 Role-based CPA Operating Ranges</h4>
+        <p>These are planning thresholds used to manage spending responsibly. Final ranges will be calibrated after 30–45 days of live data:</p>
+        <ul>
+          <li>Skilled trades: ~$75–$150 CPA</li>
+          <li>Engineering / technical: ~$150–$300 CPA</li>
+          <li>Defense/cleared-adjacent roles (where applicable): ~$250–$500 CPA</li>
+        </ul>
+        
+        <h3>6.3 Breakeven + Quality Model</h3>
+        <p>Recruiting funnels include screening, testing, and (for some roles) clearance steps. We establish a breakeven model that ties CPA targets to downstream conversion realities.</p>
+        <p>Example model inputs (calibrated with EB): apply-start→complete → SQA pass → interview → offer → hire.</p>
+        
+        <h3>6.4 Attribution Approach</h3>
+        <p>Recruiting attribution should be honest and decision-useful. We use a multi-signal contribution model that recognizes how channels work together without pretending every hire can be perfectly last-click attributed.</p>
+        <p>EB order should be: job view → apply start → apply complete (or best ATS proxy) → SQA milestone (if available) → hire (where reliable).</p>
+        
+        <h3>6.5 Governance</h3>
+        <p>Within the first 14–21 days, we implement clean tracking across EB's recruiting funnel to ensure optimization is based on reality.</p>
+        <p>What we'll implement:</p>
+        <ul>
+          <li>GA4 + GTM event naming + QA logs</li>
+          <li>UTM taxonomy: role family + market + channel + hook + creative variant</li>
+          <li>Cross-domain/ATS continuity (capture the best reliable milestone)</li>
+          <li>Quality signals cadence (SQA or best proxy)</li>
+        </ul>
+        
+        <h3>6.6 Operating Cadence</h3>
+        <p>We manage campaigns with a simple, disciplined cadence. Each week, we review CPA and apply complete trends by role and market, assess search quality, retargeting performance, and creative fatigue, and make immediate adjustments as needed.</p>
+        <p>Monthly, Electric Boat receives a concise, decision-ready report summarizing performance, key learnings, and recommended budget shifts or tests.</p>
+        <p>Quarterly, we recalibrate at a strategic level—refreshing campaign hooks, reassessing labor shed priorities, and confirming which awareness investments earn continued spend versus reallocation to higher-intent channels.</p>
+        
+        <h3>6.7 What "Good" Looks Like In the First 60–90 Days</h3>
+        <p>Stable tracking, clear top sheds/roles, measurable apply-complete lift, CPA within role-family ranges (or path to it), and a defensible CTV keep/change/reallocate decision.</p>
+      </div>
+    </div>
+    
+    <!-- SECTION 7: LANDING PAGE OPTIMIZATION -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>7) Website / Landing Page Optimization</h2>
+      </div>
+      <div class="section-content">
+        <h3>7.1 Why It Matters</h3>
+        <p>Electric Boat's media efficiency will be determined as much by the post-click experience as by the media plan. If candidates hit friction after clicking—confusing navigation, slow pages, irrelevant landing paths, long forms—CPA rises, applicant quality drops, and recruiters get stuck sorting through noise.</p>
+        <p>Our goal is simple and measurable: To increase the apply-start to apply-complete ratio, while improving the Screening-Qualified Applicant rate (SQA) and stabilizing the CPA against role-family targets. That way, we reduce recruitment time on unqualified applicants.</p>
+        
+        <h3>7.2 First 30 Days: Conversion Audit + Friction Map</h3>
+        <p>We'll conduct a conversion audit of ebcareers.com and paid-media landing paths to identify where candidates drop off and which fixes will have the greatest impact on apply-complete rate and CPA. That way, Electric Boat receives a friction map and a prioritized backlog of recommendations ranked by expected conversion lift, CPA impact, implementation effort, and ATS dependencies.</p>
+        
+        <h3>7.3 Landing-Path Alignment</h3>
+        <p>Paid traffic is routed to the correct hub by intent—trades, engineering, veterans, or early talent—with retargeting returning users to their last meaningful page.</p>
+        
+        <h3>7.4 Testing Roadmap</h3>
+        <p>We'll run one primary test per path at a time (CTA hierarchy, trust signals, mobile apply, form simplification, where ATS allows).</p>
+        <p>Our expected benchmarks are ~10–25% lift from friction fixes and ~5–15% from ongoing, measured testing.</p>
+        
+        <h3>7.5 Speed-to-Screen Workflow (TrainHire Principle)</h3>
+        <p>We'll reduce drop-off by pairing media with faster screening: video-first reviews where appropriate, a simple scoring rubric, and clear SLAs with automated candidate updates.</p>
+        
+        <h3>7.6 Tracking for Conversion Work</h3>
+        <p>We'll implement reliable tracking for job views, apply starts, and apply completes (or best proxy), supported by UTM governance and QA.</p>
+        
+        <h3>7.7 Compliance Built-In</h3>
+        <p>All conversion work follows ADA/508 standards, EEO-aware experience design, minimal PII exposure, secure ATS handoff, and brand-safety controls.</p>
+        
+        <h3>7.8 Deliverables</h3>
+        <p>Electric Boat will receive a friction map and backlog, landing-path plan, A/B testing roadmap, speed-to-screen options, and tracking governance.</p>
+      </div>
+    </div>
+    
+    <!-- SECTION 8: SEO -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>8) SEO Strategy</h2>
+      </div>
+      <div class="section-content">
+        <h3>8.1 Role</h3>
+        <p>SEO is Electric Boat's long-term lever for reducing paid media dependence while increasing high-intent inbound applicants—especially for engineering/technical roles with inflated CPCs and markets requiring sustained awareness.</p>
+        
+        <h3>8.2 First 30 Days: Technical Roadmap</h3>
+        <p>We audit crawl/indexation, site architecture (2–3 click depth), page speed, template duplication, canonicals, sitemap coverage, and JobPosting structured data where feasible.</p>
+        <p>Deliverable: an impact-ranked technical backlog tied to recruiting outcomes.</p>
+        
+        <h3>8.3 Keyword-to-Page Map</h3>
+        <p>Keywords are mapped by candidate intent to role-family and location hubs (e.g., Groton/New London; Quonset/Newport, plus approved spillover markets), not generic job pages.</p>
+        
+        <h3>8.4 On-Page Structure</h3>
+        <p>We build clear role and location hubs with value propositions, pathways, requirements, FAQs, and strong internal linking to open listings to improve discovery and conversion.</p>
+        
+        <h3>8.5 Content Modules</h3>
+        <p>We deploy practical, conversion-supporting modules—role explainers, career pathways, progression, FAQs, and "day-in-the-life" elements—embedded directly within hubs.</p>
+        
+        <h3>8.6 Expectations & Measurement</h3>
+        <p>Timeline is phased: 0–30 days audit/plan, 30–90 days implementation and early gains, 3–6 months compounding impact, and 6–12 months measurable reduction in paid reliance for core intent terms.</p>
+        
+        <h3>8.7 Deliverables</h3>
+        <p>Technical audit and roadmap, keyword-to-page map, hub template guidance, content module recommendations, and reporting tied to apply-start and apply-complete metrics.</p>
+      </div>
+    </div>
+    
+    <!-- SECTION 9: BRAND CONTENT PLAYBOOK -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>9) Brand Content Playbook</h2>
+      </div>
+      <div class="section-content">
+        <h3>9.1 Purpose</h3>
+        <p>Deliver a single, coherent employer narrative that runs consistently across channels, with role-family precision that improves performance and accelerates execution for Electric Boat teams.</p>
+        
+        <h3>9.2 Core Positioning</h3>
+        <p>We will anchor all employer messaging to Electric Boat's mission: building the world's most advanced submarines, serving national security, and offering long-term careers rooted in pride, stability, and craftsmanship.</p>
+        
+        <h3>9.3 Messaging Architecture</h3>
+        <p>We will apply a consistent structure across all creative: Hook → Proof → Role relevance → CTA aligned to candidate readiness.</p>
+        
+        <h3>9.4 Campaign Hooks (Illustrative)</h3>
+        <p>We will develop and deploy campaign-level hooks that scale across audiences, with role-specific variants for relevance.</p>
+        
+        <h4>A) The Quiet Elite</h4>
+        <p>Positioning excellence without flash, tailored by audience:</p>
+        <ul>
+          <li><strong>Trades:</strong> Elite craft. Quiet pride.</li>
+          <li><strong>Engineering:</strong> Elite thinking. Real stakes.</li>
+          <li><strong>Veterans:</strong> Continue the mission.</li>
+          <li><strong>Early Talent:</strong> Learn from the best. Earn your craft.</li>
+        </ul>
+        
+        <h4>B) Built Different. Built to Last.</h4>
+        <p>A long-term career narrative focused on durability and purpose:</p>
+        <ul>
+          <li><strong>Trades:</strong> Build it right. Build it to last.</li>
+          <li><strong>Engineering:</strong> Design what endures.</li>
+          <li><strong>Veterans:</strong> Structure. Team. Purpose.</li>
+          <li><strong>Early Talent:</strong> A real start. A real path.</li>
+        </ul>
+        
+        <h3>9.5 CTA Rules</h3>
+        <p>We will align CTAs to the funnel stage to protect efficiency:</p>
+        <ul>
+          <li><strong>Awareness:</strong> Learn / Explore</li>
+          <li><strong>Consideration:</strong> See Roles</li>
+          <li><strong>Retargeting:</strong> Finish Application</li>
+        </ul>
+        
+        <h3>9.6 Guardrails</h3>
+        <p>We will define clear tone, voice, and visual standards: confident, grounded, and mission-driven. Messaging avoids hype in favor of clarity and credibility. OOH remains simple, CTV focuses on people and work, display stays modular, and landing experiences prioritize clarity and conversion.</p>
+        
+        <h3>9.7 Deliverables</h3>
+        <p>Electric Boat will receive a complete Brand Content Playbook, including a messaging matrix, campaign hook system with role-based variants, headline and CTA libraries, landing-page content modules, and a creative review checklist to ensure consistency across teams and partners.</p>
+      </div>
+    </div>
+    
+    <!-- SECTION 10: PRICING -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>10) Pricing Requirements</h2>
+      </div>
+      <div class="section-content">
+        <h3>10.1 Engagement Model</h3>
+        <p>We propose a sprint-based engagement designed for speed, accountability, and flexibility. Each sprint is two weeks and priced at <strong>$7,500</strong>, with the ability to run parallel sprints (e.g., Media + Conversion/Creative) when hiring urgency or scale requires it.</p>
+        
+        <h3>10.2 Suggested Cadence</h3>
+        <p>Based on the scope outlined in this RFP, a typical cadence would include:</p>
+        <ul>
+          <li><strong>Month 1:</strong> 6 sprints = $45,000 (launch, foundation, rapid optimization)</li>
+          <li><strong>Month 2:</strong> 5 sprints = $37,500 (stabilization and early scaling)</li>
+          <li><strong>Months 3–12:</strong> 3–4 sprints per month = $22,500–$30,000/month</li>
+        </ul>
+        <p>This equates to approximately <strong>46 sprints annually</strong>, or <strong>~$345,000 in directional annual services</strong>.</p>
+        
+        <h3>10.3 What Sprints Cover</h3>
+        <p>Each sprint delivers defined outcomes and may include media activation and optimization, testing roadmap execution, reporting and decision meetings, tracking and attribution governance, conversion backlog support, and SEO roadmap execution when selected. Every sprint concludes with a clear summary of what shipped, what changed, and what was learned.</p>
+        
+        <h3>10.4 Media Management Fee</h3>
+        <p>In addition to sprint services, we apply a <strong>3% media management fee</strong> on managed spend. On a $2M annual media budget, this equates to approximately <strong>$60,000 per year</strong> (directional).</p>
+        
+        <h3>10.5 If the $2M Budget Must Be All-In</h3>
+        <p>If Electric Boat requires the $2M budget to include both media and services, an illustrative breakdown would be:</p>
+        <ul>
+          <li><strong>Services:</strong> approximately $345,000</li>
+          <li><strong>Remaining for media + fee:</strong> approximately $1.655M</li>
+          <li><strong>Net media after 3% fee:</strong> approximately $1.607M</li>
+        </ul>
+        <p>This structure can be adjusted to align with procurement or budgeting preferences.</p>
+        
+        <h3>10.6 Optional Add-Ons (Sprint-Based)</h3>
+        <p>Optional services—including SEO, conversion optimization and A/B testing, and creative iteration—are delivered within the same sprint framework. Larger video or production efforts are scoped separately and treated as pass-through costs.</p>
+        
+        <h3>10.7 Pass-Through Policy</h3>
+        <p>Figmints does not apply media markups. All third-party costs are pre-approved by Electric Boat and passed through at cost. A sprint log is provided for full transparency, detailing deliverables, optimizations, and outcomes each cycle.</p>
+      </div>
+    </div>
+    
+    <!-- SECTION 11: TIMELINE -->
+    <div class="section page-break">
+      <div class="section-header">
+        <h2>11) Timeline (Sprint-Based Execution Plan)</h2>
+      </div>
+      <div class="section-content">
+        <h3>11.1 Overview</h3>
+        <p>The engagement runs in two-week sprints, with an eight-week launch ramp, stabilization in weeks 9–12, and a quarterly operating rhythm thereafter. During the ramp, work runs across two coordinated lanes—Media & Performance and Conversion & Measurement—so traffic scale and funnel readiness advance together.</p>
+        
+        <h3>11.2 Weeks 1–8: Launch Ramp</h3>
+        <p>The first eight weeks focus on building a stable, measurable foundation before scaling.</p>
+        <ul>
+          <li><strong>Sprint 1:</strong> Establish governance and tracking, confirm ATS events, and finalize search architecture by role and market.</li>
+          <li><strong>Sprint 2:</strong> Launch Search and always-on retargeting; establish baseline CPA, apply-complete, and quality signals.</li>
+          <li><strong>Sprint 3:</strong> Introduce controlled programmatic prospecting, deploy role-based creative variants, and align traffic to correct landing paths.</li>
+          <li><strong>Sprint 4:</strong> Prepare CTV activation, finalize lift measurement, and pass a decision gate—CTV launches only once funnel and measurement stability are confirmed.</li>
+        </ul>
+        
+        <h3>11.3 Weeks 9–12: Stabilization & Scale</h3>
+        <p>With the foundation in place, focus shifts to efficiency and surge readiness.</p>
+        <ul>
+          <li><strong>Sprint 5:</strong> Scale top-performing roles and markets; refine queries, negatives, and retargeting sequences.</li>
+          <li><strong>Sprint 6:</strong> Implement priority friction fixes, finalize the next-quarter testing plan, and align hiring surges to media flights and creative refreshes.</li>
+        </ul>
+        
+        <h3>11.4 Ongoing Operating Rhythm</h3>
+        <p>After stabilization, Figmints operates on a consistent cadence: biweekly sprints, monthly decision-ready reporting, and quarterly refreshes to reassess campaign hooks and determine whether awareness channels (CTV or limited OOH tests) continue, adjust, or reallocate based on performance.</p>
+      </div>
+    </div>
+    
+    <!-- CHANGES SECTION -->
+    <div class="changes-section page-break">
+      <h2>📝 RFP Changes & Notes for Future Versions</h2>
+      <p><em>Use this section to document changes, improvements, and notes for future RFP submissions.</em></p>
+      
+      <h3>Pending Changes</h3>
+      <ul class="changes-list" id="changes-list">
+        <li contenteditable="true">Click to add a note...</li>
+      </ul>
+      
+      <h3>Notes</h3>
+      <textarea placeholder="Add detailed notes here for future RFP versions..."></textarea>
+      
+      <div style="margin-top: 1rem;">
+        <button onclick="addChange()" class="no-print" style="padding: 0.5rem 1rem; background: #856404; color: white; border: none; border-radius: 4px; cursor: pointer;">+ Add Change Item</button>
+      </div>
+    </div>
+    
+  </div>
+  
+  <script>
+    let editMode = false;
+    
+    function toggleEdit() {
+      editMode = !editMode;
+      const editables = document.querySelectorAll('.section-content p, .section-content li, .welcome-section p, .welcome-section li');
+      editables.forEach(el => {
+        el.contentEditable = editMode;
+      });
+      document.querySelector('.edit-toggle').textContent = editMode ? '✅ Save Mode' : '✏️ Edit Mode';
+    }
+    
+    function addChange() {
+      const list = document.getElementById('changes-list');
+      const li = document.createElement('li');
+      li.contentEditable = true;
+      li.textContent = 'New change item...';
+      list.appendChild(li);
+      li.focus();
+    }
+  </script>
+</body>
+</html>
