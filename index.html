@@ -16,17 +16,14 @@
       --text: #2d3436;
       --light: #f8f9fa;
       --border: #dee2e6;
-      --annotation-color: #fbbf24;
+      --comment-yellow: #fbbf24;
+      --comment-bg: #fef3c7;
     }
     
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', -apple-system, sans-serif;
       line-height: 1.65;
       color: var(--text);
       background: #e5e5e5;
@@ -41,7 +38,7 @@
       right: 0;
       background: var(--primary);
       color: white;
-      padding: 0.6rem 1.5rem;
+      padding: 0.5rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -51,52 +48,45 @@
     
     .toolbar-title {
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
     
-    .toolbar-title img {
-      height: 24px;
-    }
+    .toolbar-title img { height: 22px; }
     
-    .toolbar-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
+    .toolbar-actions { display: flex; gap: 0.5rem; align-items: center; }
     
     .toolbar button {
       background: var(--accent);
       color: white;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.4rem 0.8rem;
       border-radius: 4px;
       cursor: pointer;
       font-weight: 500;
-      font-size: 0.8rem;
-      transition: all 0.2s;
+      font-size: 0.75rem;
     }
     
-    .toolbar button:hover {
-      background: #c62828;
-      transform: translateY(-1px);
+    .toolbar button:hover { background: #c62828; }
+    .toolbar button.secondary { background: rgba(255,255,255,0.15); }
+    
+    .toolbar .mode-indicator {
+      background: var(--comment-yellow);
+      color: #78350f;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
     }
     
-    .toolbar button.secondary {
-      background: rgba(255,255,255,0.15);
-    }
-    
-    .toolbar button.secondary:hover {
-      background: rgba(255,255,255,0.25);
-    }
-    
-    /* Main Layout */
+    /* Layout */
     .main-container {
       display: flex;
       justify-content: center;
       gap: 20px;
-      padding: 70px 20px 40px;
+      padding: 60px 20px 40px;
       max-width: 1400px;
       margin: 0 auto;
     }
@@ -106,519 +96,358 @@
       width: 8.5in;
       background: white;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      position: relative;
     }
     
     .page {
-      padding: 0.6in 0.75in;
+      padding: 0.5in 0.7in;
       position: relative;
-      min-height: 11in;
+      min-height: 10.5in;
       background: white;
     }
     
-    .page + .page {
-      border-top: 3px dashed #ccc;
-    }
+    .page + .page { border-top: 2px dashed #ddd; }
     
-    /* Annotations Sidebar */
-    .annotations-panel {
-      width: 300px;
+    /* Comments Panel */
+    .comments-panel {
+      width: 280px;
       position: sticky;
-      top: 70px;
-      height: calc(100vh - 90px);
+      top: 60px;
+      height: calc(100vh - 80px);
       overflow-y: auto;
       background: white;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      padding: 1rem;
     }
     
-    .annotations-panel h3 {
-      font-size: 0.9rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--annotation-color);
-    }
-    
-    .annotation-item {
-      background: #fffbeb;
-      border-left: 3px solid var(--annotation-color);
-      padding: 0.75rem;
-      margin-bottom: 0.75rem;
-      border-radius: 0 4px 4px 0;
+    .comments-panel-header {
+      padding: 0.75rem 1rem;
+      background: var(--comment-yellow);
+      color: #78350f;
+      font-weight: 600;
       font-size: 0.85rem;
-      position: relative;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .comments-list { padding: 0.5rem; }
+    
+    .comment-card {
+      background: var(--comment-bg);
+      border-left: 3px solid var(--comment-yellow);
+      padding: 0.6rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.2s;
+      position: relative;
     }
     
-    .annotation-item:hover {
-      background: #fef3c7;
+    .comment-card:hover {
+      background: #fde68a;
       transform: translateX(2px);
     }
     
-    .annotation-item .section-ref {
+    .comment-card .location {
+      font-size: 0.7rem;
+      color: #92400e;
       font-weight: 600;
-      color: var(--figmints-purple);
-      font-size: 0.75rem;
       margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
-    .annotation-item .delete-btn {
+    .comment-card .text { color: #78350f; }
+    
+    .comment-card .delete-btn {
       position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
+      top: 4px;
+      right: 6px;
       background: none;
       border: none;
-      color: #999;
+      color: #b45309;
       cursor: pointer;
       font-size: 1rem;
-      line-height: 1;
+      opacity: 0.5;
     }
     
-    .annotation-item .delete-btn:hover {
-      color: var(--accent);
-    }
+    .comment-card .delete-btn:hover { opacity: 1; }
     
-    .add-annotation-form {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid #eee;
-    }
-    
-    .add-annotation-form select,
-    .add-annotation-form textarea {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-family: inherit;
+    .no-comments {
+      padding: 2rem 1rem;
+      text-align: center;
+      color: #999;
       font-size: 0.85rem;
-      margin-bottom: 0.5rem;
     }
     
-    .add-annotation-form textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
+    .no-comments strong { display: block; margin-bottom: 0.5rem; color: #666; }
     
-    .add-annotation-form button {
-      width: 100%;
-      background: var(--annotation-color);
-      color: #78350f;
-      border: none;
-      padding: 0.5rem;
-      border-radius: 4px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    
-    .add-annotation-form button:hover {
-      background: #f59e0b;
-    }
-    
-    /* Annotation markers in document */
-    .has-annotation {
+    /* Commentable elements */
+    .commentable {
       position: relative;
-    }
-    
-    .has-annotation::before {
-      content: '';
-      position: absolute;
-      left: -25px;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: var(--annotation-color);
+      cursor: pointer;
+      transition: background 0.15s;
       border-radius: 2px;
+      margin: 0 -4px;
+      padding: 0 4px;
     }
     
-    .annotation-marker {
+    .comment-mode .commentable:hover {
+      background: rgba(251, 191, 36, 0.2);
+    }
+    
+    .commentable.has-comment {
+      background: rgba(251, 191, 36, 0.25);
+      border-left: 3px solid var(--comment-yellow);
+      padding-left: 8px;
+      margin-left: -11px;
+    }
+    
+    .comment-indicator {
       position: absolute;
-      left: -35px;
-      top: 0;
-      width: 20px;
-      height: 20px;
-      background: var(--annotation-color);
+      left: -24px;
+      top: 2px;
+      width: 18px;
+      height: 18px;
+      background: var(--comment-yellow);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 700;
       color: #78350f;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
     
-    /* Cover Page */
+    /* Comment popup */
+    .comment-popup {
+      position: fixed;
+      background: white;
+      border: 2px solid var(--comment-yellow);
+      border-radius: 8px;
+      padding: 0.75rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      z-index: 2000;
+      width: 280px;
+      display: none;
+    }
+    
+    .comment-popup.active { display: block; }
+    
+    .comment-popup textarea {
+      width: 100%;
+      min-height: 60px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 0.5rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      resize: vertical;
+      margin-bottom: 0.5rem;
+    }
+    
+    .comment-popup .buttons {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+    
+    .comment-popup button {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    
+    .comment-popup .save-btn {
+      background: var(--comment-yellow);
+      color: #78350f;
+      font-weight: 600;
+    }
+    
+    .comment-popup .cancel-btn {
+      background: #eee;
+      color: #666;
+    }
+    
+    /* Cover styles */
     .cover-logos {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
       border-bottom: 2px solid var(--border);
     }
     
-    .cover-logos img.figmints {
-      height: 40px;
-    }
-    
-    .cover-logos img.eb {
-      height: 55px;
-    }
+    .cover-logos img.figmints { height: 36px; }
+    .cover-logos img.eb { height: 50px; }
     
     .cover-image {
       width: 100%;
-      height: 220px;
+      height: 200px;
       object-fit: cover;
       border-radius: 6px;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
     }
     
     .cover-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
     }
     
-    .cover-title h1 {
-      font-size: 1.15rem;
-      color: var(--primary);
-      font-weight: 600;
-    }
+    .cover-title h1 { font-size: 1.1rem; color: var(--primary); font-weight: 600; }
+    .cover-title h2 { font-size: 1.4rem; color: var(--accent); font-weight: 700; margin-top: 0.1rem; }
     
-    .cover-title h2 {
-      font-size: 1.5rem;
-      color: var(--accent);
-      font-weight: 700;
-      margin-top: 0.15rem;
-    }
-    
-    .cover-contact {
-      text-align: right;
-      font-size: 0.8rem;
-      color: #666;
-    }
-    
-    .cover-contact strong {
-      color: var(--primary);
-      display: block;
-      font-size: 0.85rem;
-    }
+    .cover-contact { text-align: right; font-size: 0.75rem; color: #666; }
+    .cover-contact strong { color: var(--primary); display: block; font-size: 0.8rem; }
     
     .welcome-section {
       background: var(--light);
-      padding: 1.25rem;
+      padding: 1rem;
       border-radius: 6px;
-      margin-top: 0.75rem;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     
-    .welcome-section h3 {
-      color: var(--accent);
-      font-size: 1rem;
-      margin-bottom: 0.6rem;
-    }
+    .welcome-section h3 { color: var(--accent); font-size: 0.95rem; margin-bottom: 0.5rem; }
     
     .signature {
-      margin-top: 1.25rem;
+      margin-top: 1rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
     }
     
     .signature img.headshot {
-      width: 55px;
-      height: 55px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       object-fit: cover;
     }
     
     .signature img.sig {
-      height: 45px;
+      height: 40px;
+      /* CSS filter to remove white background */
+      mix-blend-mode: multiply;
     }
     
-    .signature-text {
-      font-style: italic;
-      font-size: 0.85rem;
-    }
+    .signature-text { font-style: italic; font-size: 0.8rem; }
+    .signature-text strong { display: block; font-style: normal; margin-top: 0.15rem; font-size: 0.75rem; }
     
-    .signature-text strong {
-      display: block;
-      font-style: normal;
-      margin-top: 0.2rem;
-      font-size: 0.8rem;
-    }
-    
-    /* Section Styles */
-    .section {
-      margin-top: 1.5rem;
-      position: relative;
-    }
-    
-    .section:first-child {
-      margin-top: 0;
-    }
+    /* Section styles */
+    .section { margin-top: 1.25rem; }
+    .section:first-child { margin-top: 0; }
     
     .section-header {
       background: var(--primary);
       color: white;
-      padding: 0.6rem 1rem;
-      border-radius: 6px 6px 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 0.5rem 0.85rem;
+      border-radius: 5px 5px 0 0;
     }
     
-    .section-header h2 {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-    
-    .add-note-btn {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      color: white;
-      padding: 0.2rem 0.5rem;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 0.7rem;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-    
-    .section:hover .add-note-btn {
-      opacity: 1;
-    }
-    
-    .add-note-btn:hover {
-      background: var(--annotation-color);
-      color: #78350f;
-    }
+    .section-header h2 { font-size: 0.95rem; font-weight: 600; }
     
     .section-content {
       background: var(--light);
-      padding: 1rem 1.25rem;
-      border-radius: 0 0 6px 6px;
+      padding: 0.85rem 1rem;
+      border-radius: 0 0 5px 5px;
       border: 1px solid var(--border);
       border-top: none;
     }
     
-    h3 {
-      color: var(--primary);
-      font-size: 0.95rem;
-      margin: 1.1rem 0 0.4rem;
-      font-weight: 600;
-    }
+    h3 { color: var(--primary); font-size: 0.9rem; margin: 1rem 0 0.35rem; font-weight: 600; }
+    h3:first-child { margin-top: 0; }
+    h4 { color: var(--accent); font-size: 0.85rem; margin: 0.8rem 0 0.3rem; font-weight: 600; }
     
-    h3:first-child {
-      margin-top: 0;
-    }
+    p { margin-bottom: 0.4rem; }
+    ul, ol { margin-left: 1.1rem; margin-bottom: 0.4rem; }
+    li { margin-bottom: 0.1rem; }
     
-    h4 {
-      color: var(--accent);
-      font-size: 0.9rem;
-      margin: 0.9rem 0 0.35rem;
-      font-weight: 600;
-    }
+    table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; font-size: 0.8rem; }
+    th, td { padding: 0.35rem 0.5rem; text-align: left; border: 1px solid var(--border); }
+    th { background: var(--primary); color: white; font-weight: 600; font-size: 0.75rem; }
+    tr:nth-child(even) { background: #f1f3f4; }
     
-    p {
-      margin-bottom: 0.5rem;
-    }
-    
-    ul, ol {
-      margin-left: 1.25rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    li {
-      margin-bottom: 0.15rem;
-    }
-    
-    /* Tables */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0.6rem 0;
-      font-size: 0.85rem;
-    }
-    
-    th, td {
-      padding: 0.4rem 0.6rem;
-      text-align: left;
-      border: 1px solid var(--border);
-    }
-    
-    th {
-      background: var(--primary);
-      color: white;
-      font-weight: 600;
-      font-size: 0.8rem;
-    }
-    
-    tr:nth-child(even) {
-      background: #f1f3f4;
-    }
-    
-    /* Case Studies */
     .case-study {
       background: white;
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1rem;
-      margin: 1rem 0;
+      border-radius: 5px;
+      padding: 0.85rem;
+      margin: 0.85rem 0;
     }
     
-    .case-study h4 {
-      color: var(--primary);
-      font-size: 0.95rem;
-      margin-top: 0;
-    }
+    .case-study h4 { color: var(--primary); font-size: 0.9rem; margin-top: 0; }
     
-    .case-study-images {
-      display: flex;
-      gap: 0.6rem;
-      margin: 0.6rem 0;
-      flex-wrap: wrap;
-    }
-    
-    .case-study-images img {
-      max-width: 48%;
-      height: auto;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
+    .case-study-images { display: flex; gap: 0.5rem; margin: 0.5rem 0; flex-wrap: wrap; }
+    .case-study-images img { max-width: 48%; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
     
     .case-study-image-single {
       max-width: 100%;
-      height: auto;
-      border-radius: 6px;
+      border-radius: 5px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin: 0.6rem 0;
+      margin: 0.5rem 0;
     }
     
-    /* Print & PDF Styles */
+    /* Print & PDF */
     @media print {
-      body {
-        background: white;
-        font-size: 10pt;
-      }
-      
-      .toolbar, .annotations-panel, .add-note-btn {
-        display: none !important;
-      }
-      
-      .main-container {
-        padding: 0;
-        display: block;
-      }
-      
-      .document {
-        width: 100%;
-        box-shadow: none;
-      }
-      
-      .page {
-        padding: 0.5in 0.6in;
-        min-height: auto;
-        page-break-after: always;
-      }
-      
-      .page:last-child {
-        page-break-after: auto;
-      }
-      
-      .page + .page {
-        border-top: none;
-      }
-      
-      .section {
-        break-inside: avoid;
-      }
-      
-      .case-study {
-        break-inside: avoid;
-      }
-      
-      img {
-        break-inside: avoid;
-      }
-      
-      table {
-        break-inside: avoid;
-      }
-      
-      .has-annotation::before,
-      .annotation-marker {
-        display: none;
-      }
-      
-      @page {
-        margin: 0.5in;
-        size: letter;
-      }
+      body { background: white; }
+      .toolbar, .comments-panel, .comment-popup, .comment-indicator { display: none !important; }
+      .main-container { padding: 0; display: block; }
+      .document { width: 100%; box-shadow: none; }
+      .page { padding: 0.4in 0.5in; min-height: auto; page-break-after: always; }
+      .page:last-child { page-break-after: auto; }
+      .page + .page { border-top: none; }
+      .section, .case-study, img, table { break-inside: avoid; }
+      .commentable.has-comment { background: none; border: none; padding: 0; margin: 0; }
+      @page { margin: 0.4in; size: letter; }
     }
     
-    /* PDF export mode */
-    .pdf-mode {
-      background: white !important;
-    }
+    .pdf-mode .toolbar, .pdf-mode .comments-panel, .pdf-mode .comment-popup, .pdf-mode .comment-indicator { display: none !important; }
+    .pdf-mode .main-container { padding: 0; }
+    .pdf-mode .document { box-shadow: none; }
+    .pdf-mode .page { min-height: auto; }
+    .pdf-mode .page + .page { border-top: none; }
+    .pdf-mode .commentable.has-comment { background: none; border: none; padding: 0; margin: 0; }
+    .pdf-mode body { background: white; }
     
-    .pdf-mode .toolbar,
-    .pdf-mode .annotations-panel,
-    .pdf-mode .add-note-btn,
-    .pdf-mode .has-annotation::before,
-    .pdf-mode .annotation-marker {
-      display: none !important;
-    }
-    
-    .pdf-mode .main-container {
-      padding: 0;
-      max-width: none;
-    }
-    
-    .pdf-mode .document {
-      box-shadow: none;
-    }
-    
-    .pdf-mode .page {
-      min-height: auto;
-    }
-    
-    .pdf-mode .page + .page {
-      border-top: none;
-    }
-
-    /* Responsive */
-    @media (max-width: 1200px) {
-      .annotations-panel {
-        display: none;
-      }
-    }
+    @media (max-width: 1100px) { .comments-panel { display: none; } }
   </style>
 </head>
 <body>
-  <!-- Toolbar -->
   <div class="toolbar">
     <div class="toolbar-title">
       <img src="images/figmints-logo.png" alt="Figmints">
       <span>Electric Boat RFP</span>
     </div>
     <div class="toolbar-actions">
-      <button class="secondary" onclick="clearAnnotations()">🗑️ Clear All</button>
+      <span class="mode-indicator" id="mode-indicator" style="display:none;">💬 Comment Mode ON</span>
+      <button class="secondary" onclick="toggleCommentMode()" id="comment-mode-btn">💬 Add Comments</button>
+      <button class="secondary" onclick="clearComments()">🗑️ Clear</button>
       <button onclick="exportPDF()">📥 Export PDF</button>
     </div>
   </div>
   
+  <!-- Comment popup -->
+  <div class="comment-popup" id="comment-popup">
+    <textarea id="comment-input" placeholder="Enter your comment or change request..."></textarea>
+    <div class="buttons">
+      <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+      <button class="save-btn" onclick="saveComment()">Save</button>
+    </div>
+  </div>
+  
   <div class="main-container">
-    <!-- Document -->
     <div class="document" id="rfp-document">
       
       <!-- PAGE 1: COVER -->
-      <div class="page" id="page-cover">
+      <div class="page">
         <div class="cover-logos">
           <img src="images/figmints-logo.png" alt="Figmints" class="figmints">
           <img src="images/img-003.png" alt="Electric Boat" class="eb">
@@ -639,20 +468,20 @@
           </div>
         </div>
         
-        <div class="welcome-section" id="section-cover" data-section="Cover Letter">
-          <h3>WELCOME!</h3>
-          <p>Dear Ms. Chiaradio,</p>
-          <p>Electric Boat isn't "just hiring." You're running a national-scale talent acquisition campaign with two hard constraints: regional labor-shed reality (CT/RI/MA) and defense-sector expectations where sloppy media and sloppy messaging are unacceptable. That's exactly where most agencies get exposed.</p>
-          <p>Figmints is a digital performance agency, and we operate a hiring-focused sub-brand, TrainHire (trainhire.com), built on one thesis: hiring is marketing—and the winners treat it like a measurable system, not a pile of requisitions.</p>
-          <p>When we posted one role and got hundreds of applicants, we didn't drown in resumes—we rebuilt the workflow: tighter qualification gates, faster screening, and cleaner "candidate conversion" so the process stayed fast, fair, and repeatable. That's the mindset we bring to EB: disciplined media execution, measurable hiring economics, and conversion optimization from awareness → apply-complete → hire.</p>
-          <p>We're submitting because EB's scope matches how we operate at our best:</p>
+        <div class="welcome-section">
+          <h3 class="commentable" data-id="cover-1">WELCOME!</h3>
+          <p class="commentable" data-id="cover-2">Dear Ms. Chiaradio,</p>
+          <p class="commentable" data-id="cover-3">Electric Boat isn't "just hiring." You're running a national-scale talent acquisition campaign with two hard constraints: regional labor-shed reality (CT/RI/MA) and defense-sector expectations where sloppy media and sloppy messaging are unacceptable. That's exactly where most agencies get exposed.</p>
+          <p class="commentable" data-id="cover-4">Figmints is a digital performance agency, and we operate a hiring-focused sub-brand, TrainHire (trainhire.com), built on one thesis: hiring is marketing—and the winners treat it like a measurable system, not a pile of requisitions.</p>
+          <p class="commentable" data-id="cover-5">When we posted one role and got hundreds of applicants, we didn't drown in resumes—we rebuilt the workflow: tighter qualification gates, faster screening, and cleaner "candidate conversion" so the process stayed fast, fair, and repeatable. That's the mindset we bring to EB: disciplined media execution, measurable hiring economics, and conversion optimization from awareness → apply-complete → hire.</p>
+          <p class="commentable" data-id="cover-6">We're submitting because EB's scope matches how we operate at our best:</p>
           <ul>
-            <li>Performance-first media (Search + Programmatic + CTV + selective traditional) managed to CPA → SQA → CPH, not vanity metrics.</li>
-            <li>Story-driven recruiting creative that respects real audiences (trades, engineers, veterans, early talent) without hype.</li>
-            <li>Conversion + tracking governance you can trust at the level you need: market, role family, funnel step.</li>
-            <li>Defense-ready operating posture: brand safety controls, OFCCP/EEO-aware ad practices, ADA/508 considerations, and ITAR-aware review habits.</li>
+            <li class="commentable" data-id="cover-7">Performance-first media (Search + Programmatic + CTV + selective traditional) managed to CPA → SQA → CPH, not vanity metrics.</li>
+            <li class="commentable" data-id="cover-8">Story-driven recruiting creative that respects real audiences (trades, engineers, veterans, early talent) without hype.</li>
+            <li class="commentable" data-id="cover-9">Conversion + tracking governance you can trust at the level you need: market, role family, funnel step.</li>
+            <li class="commentable" data-id="cover-10">Defense-ready operating posture: brand safety controls, OFCCP/EEO-aware ad practices, ADA/508 considerations, and ITAR-aware review habits.</li>
           </ul>
-          <p>If selected, we'll move fast: validate assumptions, launch in phases, and optimize continuously—working in lockstep with EB recruiting + marketing teams (including your in-house social program).</p>
+          <p class="commentable" data-id="cover-11">If selected, we'll move fast: validate assumptions, launch in phases, and optimize continuously—working in lockstep with EB recruiting + marketing teams (including your in-house social program).</p>
           <div class="signature">
             <img src="images/img-004.png" alt="James Kwon" class="headshot">
             <div class="signature-text">
@@ -665,608 +494,490 @@
       </div>
       
       <!-- PAGE 2: SECTION 1 -->
-      <div class="page" id="page-1">
-        <div class="section" id="section-1" data-section="1) Media Plan">
-          <div class="section-header">
-            <h2>1) Media Plan + Strategic Mix Recommendations</h2>
-            <button class="add-note-btn" onclick="quickAddNote('1) Media Plan')">+ Note</button>
-          </div>
+      <div class="page">
+        <div class="section">
+          <div class="section-header"><h2>1) Media Plan + Strategic Mix Recommendations</h2></div>
           <div class="section-content">
-            <p>Will run this like performance marketing: capture intent (Search), recover drop-off (retargeting), and use awareness (CTV / optional OOH) only when it proves downstream lift.</p>
+            <p class="commentable" data-id="s1-intro">Will run this like performance marketing: capture intent (Search), recover drop-off (retargeting), and use awareness (CTV / optional OOH) only when it proves downstream lift.</p>
             
-            <h3>1.1 Optimization Objective</h3>
-            <p>Will run this like performance marketing: capture intent (Search), recover drop-off (retargeting), and use awareness (CTV / optional OOH) only when it proves downstream lift.</p>
+            <h3 class="commentable" data-id="s1-1-title">1.1 Optimization Objective</h3>
+            <p class="commentable" data-id="s1-1">Capture intent (Search), recover drop-off (retargeting), and use awareness (CTV / optional OOH) only when it proves downstream lift.</p>
             
-            <h3>1.2 KPI Hierarchy</h3>
-            <p>Our proposed metric priority hierarchy is:</p>
+            <h3 class="commentable" data-id="s1-2-title">1.2 KPI Hierarchy</h3>
             <ol>
-              <li><strong>Cost-per-Hire (CPH).</strong> This is the true measure of success: how efficiently media investment turns into actual hires.</li>
-              <li><strong>Screening-Qualified Applicant rate (SQA).</strong> This measures how many applicants meet baseline qualifications.</li>
-              <li><strong>Cost-per-Application (CPA).</strong> CPA tells us how efficiently we are generating applicants, but it must be evaluated alongside quality (SQA), not in isolation.</li>
-              <li><strong>Application completion rate.</strong> This indicates whether candidates who show intent can complete the application process without friction.</li>
-              <li><strong>Reach, frequency, and awareness.</strong> These metrics help us understand whether employer messaging is reaching enough people.</li>
+              <li class="commentable" data-id="s1-2a"><strong>Cost-per-Hire (CPH).</strong> True measure of success.</li>
+              <li class="commentable" data-id="s1-2b"><strong>Screening-Qualified Applicant rate (SQA).</strong> Measures baseline qualifications.</li>
+              <li class="commentable" data-id="s1-2c"><strong>Cost-per-Application (CPA).</strong> Efficiency metric, evaluate with quality.</li>
+              <li class="commentable" data-id="s1-2d"><strong>Application completion rate.</strong> Friction indicator.</li>
+              <li class="commentable" data-id="s1-2e"><strong>Reach, frequency, awareness.</strong> Reach metrics.</li>
             </ol>
             
-            <h3>1.3 Guardrails to Prevent Budget Fragmentation</h3>
-            <p>We will start with the smallest set of channels that reliably produce a qualified applicant flow, then expand only when it compounds results. Protect Search + retargeting first. Flight awareness; don't "always-on" it out of habit.</p>
+            <h3 class="commentable" data-id="s1-3-title">1.3 Guardrails</h3>
+            <p class="commentable" data-id="s1-3">Start with smallest set of channels that reliably produce qualified applicants. Protect Search + retargeting first.</p>
             
-            <h3>1.4 Our Digital-First $2M Recommended Allocation</h3>
+            <h3 class="commentable" data-id="s1-4-title">1.4 $2M Recommended Allocation</h3>
             <table>
-              <thead>
-                <tr><th>Channel</th><th>%</th><th>Annual</th><th>Primary Role</th></tr>
-              </thead>
+              <thead><tr><th>Channel</th><th>%</th><th>Annual</th><th>Role</th></tr></thead>
               <tbody>
-                <tr><td>Google Search</td><td>45%</td><td>$900,000</td><td>High-intent capture</td></tr>
-                <tr><td>Programmatic (prospecting + retargeting)</td><td>30%</td><td>$600,000</td><td>Conversion lift + reinforcement</td></tr>
-                <tr><td>CTV (flighted)</td><td>10%</td><td>$200,000</td><td>Trust + mission awareness</td></tr>
-                <tr><td>Paid Social (limited)</td><td>5%</td><td>$100,000</td><td>Role-specific amplification</td></tr>
-                <tr><td>Optimization Reserve / Flex</td><td>10%</td><td>$200,000</td><td>Scale winners + tests</td></tr>
+                <tr class="commentable" data-id="s1-4a"><td>Google Search</td><td>45%</td><td>$900K</td><td>High-intent capture</td></tr>
+                <tr class="commentable" data-id="s1-4b"><td>Programmatic</td><td>30%</td><td>$600K</td><td>Conversion lift</td></tr>
+                <tr class="commentable" data-id="s1-4c"><td>CTV (flighted)</td><td>10%</td><td>$200K</td><td>Trust/awareness</td></tr>
+                <tr class="commentable" data-id="s1-4d"><td>Paid Social</td><td>5%</td><td>$100K</td><td>Role-specific</td></tr>
+                <tr class="commentable" data-id="s1-4e"><td>Optimization Reserve</td><td>10%</td><td>$200K</td><td>Scale winners</td></tr>
               </tbody>
             </table>
-            <p><em>Note: Out-of-Home is not included as a default line item because it is the least attributable.</em></p>
             
-            <h3>1.5 Channel Mix Rationale</h3>
+            <h3 class="commentable" data-id="s1-5-title">1.5 Channel Mix Rationale</h3>
             <ul>
-              <li><strong>Search:</strong> primary acquisition engine; structured by role family + labor shed; tight query control.</li>
-              <li><strong>Programmatic retargeting (always-on):</strong> recover high intent; often the fastest CPA stabilizer.</li>
-              <li><strong>Programmatic prospecting (controlled):</strong> Reinforce hook in priority sheds; measured by downstream impact.</li>
-              <li><strong>CTV (flighted):</strong> earns its keep via branded search lift + retargeting pool growth + CPA stabilization.</li>
-              <li><strong>Paid social (limited):</strong> LinkedIn for engineering credibility; Meta for veteran/transition + retargeting support.</li>
+              <li class="commentable" data-id="s1-5a"><strong>Search:</strong> primary acquisition; role family + labor shed; tight query control.</li>
+              <li class="commentable" data-id="s1-5b"><strong>Retargeting:</strong> recover high intent; fastest CPA stabilizer.</li>
+              <li class="commentable" data-id="s1-5c"><strong>Prospecting:</strong> reinforce hook in priority sheds.</li>
+              <li class="commentable" data-id="s1-5d"><strong>CTV:</strong> branded search lift + retargeting pool growth.</li>
+              <li class="commentable" data-id="s1-5e"><strong>Paid social:</strong> LinkedIn for engineering; Meta for veterans.</li>
             </ul>
             
-            <h3>1.6 Sequencing</h3>
+            <h3 class="commentable" data-id="s1-6-title">1.6 Sequencing</h3>
             <ul>
-              <li><strong>Weeks 1–4:</strong> Search launch + always-on retargeting + tracking baseline.</li>
-              <li><strong>Weeks 5–12:</strong> scale winners; introduce controlled prospecting; CTV only once stable.</li>
-              <li><strong>Quarterly:</strong> refresh creative; keep/change/reallocate awareness based on measurable lift.</li>
-            </ul>
-            
-            <h3>1.7 Delivery Standards</h3>
-            <ul>
-              <li>CTV flights: frequency 3–6/month/HH; 6–8 weeks.</li>
-              <li>Programmatic prospecting: 2–4 impressions/user/week.</li>
-              <li>Retargeting: 3–6/week initially; taper.</li>
-              <li>Search: intent coverage + strict negatives + market caps.</li>
+              <li class="commentable" data-id="s1-6a"><strong>Weeks 1–4:</strong> Search launch + retargeting + tracking baseline.</li>
+              <li class="commentable" data-id="s1-6b"><strong>Weeks 5–12:</strong> Scale winners; controlled prospecting; CTV when stable.</li>
+              <li class="commentable" data-id="s1-6c"><strong>Quarterly:</strong> Refresh creative; reallocate based on lift.</li>
             </ul>
           </div>
         </div>
       </div>
       
       <!-- PAGE 3: SECTION 2 -->
-      <div class="page" id="page-2">
-        <div class="section" id="section-2" data-section="2) AdWords Strategy">
-          <div class="section-header">
-            <h2>2) AdWords Strategy & Structure</h2>
-            <button class="add-note-btn" onclick="quickAddNote('2) AdWords Strategy')">+ Note</button>
-          </div>
+      <div class="page">
+        <div class="section">
+          <div class="section-header"><h2>2) AdWords Strategy & Structure</h2></div>
           <div class="section-content">
-            <h3>2.1 Role of Search</h3>
-            <p>Most accountable channel for recruiting outcomes; managed to CPA + SQA, with CPH where ATS supports.</p>
+            <h3 class="commentable" data-id="s2-1-title">2.1 Role of Search</h3>
+            <p class="commentable" data-id="s2-1">Most accountable channel; managed to CPA + SQA, with CPH where ATS supports.</p>
             
-            <h3>2.2 Keyword Methodology</h3>
+            <h3 class="commentable" data-id="s2-2-title">2.2 Keyword Methodology</h3>
             <ul>
-              <li><strong>Role-family clusters:</strong> trades/engineering/early talent/veterans</li>
-              <li><strong>Labor-shed modifiers:</strong> Groton/New London; Quonset/Newport; selective MA spillover</li>
-              <li><strong>Pathway terms:</strong> apprenticeship, certification, SkillBridge, entry-level</li>
-              <li><strong>Search term mining:</strong> exclude low-intent "research only" searches</li>
+              <li class="commentable" data-id="s2-2a"><strong>Role-family clusters:</strong> trades/engineering/early talent/veterans</li>
+              <li class="commentable" data-id="s2-2b"><strong>Labor-shed modifiers:</strong> Groton/New London; Quonset/Newport; MA spillover</li>
+              <li class="commentable" data-id="s2-2c"><strong>Pathway terms:</strong> apprenticeship, certification, SkillBridge</li>
             </ul>
             
-            <h3>2.3 Account Segmentation</h3>
+            <h3 class="commentable" data-id="s2-3-title">2.3 Account Segmentation</h3>
             <ul>
-              <li>Role family (primary)</li>
-              <li>Geography by labor shed: Zone A (0–30mi), Zone B (30–60mi), Zone C (60+)</li>
-              <li>Intent tiers: job-now vs pathway vs brand/navigational</li>
+              <li class="commentable" data-id="s2-3a">Role family (primary)</li>
+              <li class="commentable" data-id="s2-3b">Geography: Zone A (0–30mi), Zone B (30–60mi), Zone C (60+)</li>
+              <li class="commentable" data-id="s2-3c">Intent tiers: job-now vs pathway vs brand</li>
             </ul>
             
-            <h3>2.4 Query Hygiene (Protect CPA + Brand)</h3>
+            <h3 class="commentable" data-id="s2-4-title">2.4 Query Hygiene</h3>
             <ul>
-              <li>Exact/Phrase first; Broad only with strong guardrails</li>
-              <li>Aggressive negatives by role family</li>
-              <li>Weekly audits to block irrelevant spikes</li>
+              <li class="commentable" data-id="s2-4a">Exact/Phrase first; Broad with guardrails</li>
+              <li class="commentable" data-id="s2-4b">Aggressive negatives by role family</li>
+              <li class="commentable" data-id="s2-4c">Weekly audits to block irrelevant spikes</li>
             </ul>
             
-            <h3>2.5 Bidding & Budget Governance</h3>
+            <h3 class="commentable" data-id="s2-5-title">2.5 Directional Ranges</h3>
             <ul>
-              <li><strong>Phase 1:</strong> conservative bidding + tight geo/match constraints</li>
-              <li><strong>Phase 2:</strong> scale by role family/labor shed based on CPA + SQA</li>
+              <li class="commentable" data-id="s2-5a">Trades: CPC ~$6–$15 | CPA ~$75–$150</li>
+              <li class="commentable" data-id="s2-5b">Engineering: CPC ~$12–$35+ | CPA ~$150–$300</li>
+              <li class="commentable" data-id="s2-5c">Cleared-adjacent: CPA ~$250–$500</li>
             </ul>
             
-            <h3>2.6 Directional Ranges</h3>
+            <h3 class="commentable" data-id="s2-6-title">2.6 Cadence</h3>
             <ul>
-              <li>Trades CPC: ~$6–$15 | CPA: ~$75–$150</li>
-              <li>Engineering CPC: ~$12–$35+ | CPA: ~$150–$300</li>
-              <li>Cleared-adjacent: ~$250–$500 CPA</li>
-            </ul>
-            
-            <h3>2.7 Conversion-Path Alignment</h3>
-            <p>We align keywords to role-specific landing paths—trades, engineering, veterans, and early talent—so candidates arrive at content that matches their intent.</p>
-            
-            <h3>2.8 Cadence</h3>
-            <ul>
-              <li><strong>Daily:</strong> pacing + CPA volatility + conversion integrity</li>
-              <li><strong>Weekly:</strong> terms/negatives + bids/budgets + copy tests</li>
-              <li><strong>Monthly:</strong> decision-grade report + reallocations</li>
+              <li class="commentable" data-id="s2-6a"><strong>Daily:</strong> pacing + CPA volatility</li>
+              <li class="commentable" data-id="s2-6b"><strong>Weekly:</strong> terms/negatives + bids/budgets</li>
+              <li class="commentable" data-id="s2-6c"><strong>Monthly:</strong> decision-grade report</li>
             </ul>
           </div>
         </div>
       </div>
       
-      <!-- PAGE 4: SECTION 3 -->
-      <div class="page" id="page-3">
-        <div class="section" id="section-3" data-section="3) Traditional & Broadcast">
-          <div class="section-header">
-            <h2>3) Traditional & Broadcast Media</h2>
-            <button class="add-note-btn" onclick="quickAddNote('3) Traditional & Broadcast')">+ Note</button>
-          </div>
+      <!-- PAGE 4: SECTIONS 3-4 -->
+      <div class="page">
+        <div class="section">
+          <div class="section-header"><h2>3) Traditional & Broadcast Media</h2></div>
           <div class="section-content">
-            <h3>3.1 Purpose and Role</h3>
-            <p>Programmatic Display and CTV solve two problems Search alone cannot:</p>
-            <ol>
-              <li>Demand creation and trust-building in competitive labor markets</li>
-              <li>Conversion lift after a candidate shows intent but doesn't complete an application</li>
-            </ol>
+            <h3 class="commentable" data-id="s3-1-title">3.1 Purpose</h3>
+            <p class="commentable" data-id="s3-1">Programmatic Display and CTV solve: (1) demand creation/trust-building, (2) conversion lift after intent.</p>
             
-            <h3>3.2 Targeting Approach</h3>
+            <h3 class="commentable" data-id="s3-2-title">3.2 Targeting</h3>
+            <p class="commentable" data-id="s3-2">Geo + contextual + first-party (core). Modeled/lookalike after data maturity. Zone A/B/C delivery model.</p>
+            
+            <h3 class="commentable" data-id="s3-3-title">3.3 Execution</h3>
             <ul>
-              <li>Geo + contextual + first-party (core)</li>
-              <li>Modeled/lookalike only after data maturity</li>
-              <li>Zone A/B/C delivery model for budget discipline</li>
+              <li class="commentable" data-id="s3-3a"><strong>Prospecting:</strong> PMPs/quality exchanges; role-family creative</li>
+              <li class="commentable" data-id="s3-3b"><strong>Retargeting:</strong> job viewers + apply-starts; sequence 0–3/4–14/15–30 days</li>
+              <li class="commentable" data-id="s3-3c"><strong>CTV:</strong> flighted awareness in priority labor sheds, 15–30s formats</li>
             </ul>
-            
-            <h3>3.3 Programmatic Execution</h3>
-            <ul>
-              <li><strong>Prospecting:</strong> PMPs/high-quality exchanges; role-family creative; CTA matched to stage.</li>
-              <li><strong>Retargeting (always-on):</strong> job viewers + apply-starts; sequence 0–3 / 4–14 / 15–30 days.</li>
-            </ul>
-            
-            <h3>3.4 CTV Execution</h3>
-            <p>CTV is used as a flighted awareness lever in priority labor sheds, not an always-on channel. We run regional OTT/CTV in 15–30s formats.</p>
-            
-            <h3>3.5 Reporting</h3>
-            <p>Performance evaluated through downstream signals: CPA trends, apply-complete lift, branded search lift, and retargeting pool changes.</p>
           </div>
         </div>
         
-        <div class="section" id="section-4" data-section="4) OOH Strategy">
-          <div class="section-header">
-            <h2>4) Out-of-Home (OOH) Strategy (Test-Based)</h2>
-            <button class="add-note-btn" onclick="quickAddNote('4) OOH Strategy')">+ Note</button>
-          </div>
+        <div class="section">
+          <div class="section-header"><h2>4) Out-of-Home (OOH) Strategy</h2></div>
           <div class="section-content">
-            <h3>4.1 Role</h3>
-            <p>OOH is the least directly attributable channel. If used, it reinforces the campaign hook in highest-probability commuter corridors.</p>
+            <h3 class="commentable" data-id="s4-1-title">4.1 Role</h3>
+            <p class="commentable" data-id="s4-1">Least attributable channel. Reinforces campaign hook in high-probability commuter corridors.</p>
             
-            <h3>4.2 Corridors</h3>
+            <h3 class="commentable" data-id="s4-2-title">4.2 Corridors</h3>
             <ul>
-              <li><strong>CT:</strong> I-95 and Route 1 units tied to Groton/New London</li>
-              <li><strong>RI:</strong> Route 4, selective I-95, Newport bridge approaches</li>
-              <li><strong>MA:</strong> only if digital data proves candidate flow</li>
+              <li class="commentable" data-id="s4-2a"><strong>CT:</strong> I-95, Route 1 (Groton/New London)</li>
+              <li class="commentable" data-id="s4-2b"><strong>RI:</strong> Route 4, I-95, Newport bridge</li>
+              <li class="commentable" data-id="s4-2c"><strong>MA:</strong> only if data proves candidate flow</li>
             </ul>
             
-            <h3>4.3 Flighting & Budget</h3>
-            <ul>
-              <li>1–2 flights/year, 6–8 weeks</li>
-              <li>Static bulletin (4 wks): ~$4k–$15k</li>
-              <li>Digital bulletin (4 wks): ~$8k–$25k</li>
-              <li>Test flight budget: $150k–$350k</li>
-            </ul>
+            <h3 class="commentable" data-id="s4-3-title">4.3 Budget</h3>
+            <p class="commentable" data-id="s4-3">1–2 flights/year, 6–8 weeks. Static ~$4k–$15k, Digital ~$8k–$25k. Test flight: $150k–$350k.</p>
           </div>
         </div>
       </div>
       
       <!-- PAGE 5: CASE STUDIES -->
-      <div class="page" id="page-5">
-        <div class="section" id="section-5" data-section="5) Case Studies">
-          <div class="section-header">
-            <h2>5) Case Studies</h2>
-            <button class="add-note-btn" onclick="quickAddNote('5) Case Studies')">+ Note</button>
-          </div>
+      <div class="page">
+        <div class="section">
+          <div class="section-header"><h2>5) Case Studies</h2></div>
           <div class="section-content">
             <div class="case-study">
-              <h4>Papitto Opportunity Connection, TransformRI Campaign</h4>
-              <p>Dedicated $100M to BIPOC efforts in RI. High schoolers challenged to dream what $1M could do for the BIPOC community. Winner gets $10k scholarship—and the best idea gets funded.</p>
-              
-              <p><strong>APPROACH:</strong> Brought the BIPOC voice to center stage through spoken word. Developed script, produced video, created interactive designs.</p>
-              
+              <h4 class="commentable" data-id="s5-1-title">Papitto Opportunity Connection, TransformRI</h4>
+              <p class="commentable" data-id="s5-1a">$100M dedicated to BIPOC efforts in RI. High schoolers challenged: $1M to the best idea for BIPOC community.</p>
+              <p class="commentable" data-id="s5-1b"><strong>APPROACH:</strong> Spoken word to bring BIPOC voice to center stage. Script, video production, interactive designs.</p>
               <div class="case-study-images">
-                <img src="images/img-007.png" alt="TransformRI Campaign">
+                <img src="images/img-007.png" alt="TransformRI">
                 <img src="images/img-008.png" alt="POC Website">
               </div>
-              
-              <p><strong>RESULTS:</strong> Won the <strong>2022 PRSA Silver Anvil Award</strong> for Non-profit category. Continued monthly partnership with the foundation.</p>
-              
-              <img src="images/img-009.png" alt="PRSA Silver Anvil Award" class="case-study-image-single" style="max-width: 80%;">
+              <p class="commentable" data-id="s5-1c"><strong>RESULTS:</strong> Won <strong>2022 PRSA Silver Anvil Award</strong> (Non-profit). Continued monthly partnership.</p>
+              <img src="images/img-009.png" alt="Award" class="case-study-image-single" style="max-width:75%;">
             </div>
           </div>
         </div>
       </div>
       
       <!-- PAGE 6: MORE CASE STUDIES -->
-      <div class="page" id="page-6">
-        <div class="section" id="section-5b" data-section="5) Case Studies (cont.)">
-          <div class="section-header">
-            <h2>5) Case Studies (continued)</h2>
-            <button class="add-note-btn" onclick="quickAddNote('5) Case Studies (cont.)')">+ Note</button>
-          </div>
+      <div class="page">
+        <div class="section">
+          <div class="section-header"><h2>5) Case Studies (continued)</h2></div>
           <div class="section-content">
             <div class="case-study">
-              <h4>Siren Marine - www.sirenmarine.com</h4>
-              <p><strong>PROBLEM:</strong> First "connected boat" technology on the market, but looked like a garage startup.</p>
-              <p><strong>SOLUTION:</strong> New look & feel, story through web, graphics, video, and marketing.</p>
-              <img src="images/img-013.png" alt="Siren Marine Website" class="case-study-image-single">
-              <p><strong>RESULTS:</strong> Secured <strong>shelf space at West Marine</strong>, the largest marine retailer in the country.</p>
+              <h4 class="commentable" data-id="s5-2-title">Siren Marine</h4>
+              <p class="commentable" data-id="s5-2a"><strong>PROBLEM:</strong> First "connected boat" tech, but looked like a garage startup.</p>
+              <p class="commentable" data-id="s5-2b"><strong>SOLUTION:</strong> New look & feel through web, graphics, video, marketing.</p>
+              <img src="images/img-013.png" alt="Siren Marine" class="case-study-image-single">
+              <p class="commentable" data-id="s5-2c"><strong>RESULT:</strong> Secured <strong>shelf space at West Marine</strong>.</p>
             </div>
-            
             <div class="case-study">
-              <h4>CCL & Homescapes - www.capecodlumber.com</h4>
-              <p><strong>PROBLEM:</strong> Expand brand awareness for new HomeScapes showroom in Boston/South Shore.</p>
-              <p><strong>PLAN:</strong> Content marketing campaigns for homeowners and professionals—digital, PR, print, social.</p>
-              <p><strong>RESULTS:</strong> <strong>20% increase in traffic</strong>, <strong>40% increase in kitchen sales</strong>.</p>
+              <h4 class="commentable" data-id="s5-3-title">CCL & Homescapes</h4>
+              <p class="commentable" data-id="s5-3a"><strong>PROBLEM:</strong> Expand awareness for HomeScapes showroom (Boston/South Shore).</p>
+              <p class="commentable" data-id="s5-3b"><strong>PLAN:</strong> Content marketing—digital, PR, print, social.</p>
+              <p class="commentable" data-id="s5-3c"><strong>RESULTS:</strong> <strong>20% traffic increase</strong>, <strong>40% kitchen sales increase</strong>.</p>
             </div>
           </div>
         </div>
       </div>
       
       <!-- PAGE 7: MEASUREMENT -->
-      <div class="page" id="page-7">
-        <div class="section" id="section-6" data-section="6) Measurement & Analytics">
-          <div class="section-header">
-            <h2>6) Measurement & Analytics</h2>
-            <button class="add-note-btn" onclick="quickAddNote('6) Measurement & Analytics')">+ Note</button>
-          </div>
+      <div class="page">
+        <div class="section">
+          <div class="section-header"><h2>6) Measurement & Analytics</h2></div>
           <div class="section-content">
-            <h3>6.1 Philosophy</h3>
-            <p>Managed like a performance system tied to hiring outcomes. CPA = leading indicator, SQA = quality guardrail, CPH = north-star.</p>
+            <h3 class="commentable" data-id="s6-1-title">6.1 Philosophy</h3>
+            <p class="commentable" data-id="s6-1">Managed like a performance system. CPA = leading indicator, SQA = quality guardrail, CPH = north-star.</p>
             
-            <h3>6.2 Dashboard Views</h3>
+            <h3 class="commentable" data-id="s6-2-title">6.2 Dashboard Views</h3>
             <ul>
-              <li><strong>Executive:</strong> spend, blended CPA, SQA trend, apply-complete, top markets/roles</li>
-              <li><strong>Role family:</strong> trades vs engineering vs veterans vs early talent</li>
-              <li><strong>Labor shed:</strong> Zone A/B/C and corridor insights</li>
-              <li><strong>Channel contribution:</strong> Search, programmatic, CTV, social</li>
+              <li class="commentable" data-id="s6-2a"><strong>Executive:</strong> spend, blended CPA, SQA, apply-complete, top markets</li>
+              <li class="commentable" data-id="s6-2b"><strong>Role family:</strong> trades vs engineering vs veterans vs early talent</li>
+              <li class="commentable" data-id="s6-2c"><strong>Labor shed:</strong> Zone A/B/C insights</li>
+              <li class="commentable" data-id="s6-2d"><strong>Channel:</strong> Search, programmatic, CTV, social</li>
             </ul>
             
-            <h3>6.3 CPA Operating Ranges</h3>
+            <h3 class="commentable" data-id="s6-3-title">6.3 CPA Ranges</h3>
             <ul>
-              <li>Skilled trades: ~$75–$150</li>
-              <li>Engineering/technical: ~$150–$300</li>
-              <li>Defense/cleared-adjacent: ~$250–$500</li>
+              <li class="commentable" data-id="s6-3a">Skilled trades: ~$75–$150</li>
+              <li class="commentable" data-id="s6-3b">Engineering: ~$150–$300</li>
+              <li class="commentable" data-id="s6-3c">Cleared-adjacent: ~$250–$500</li>
             </ul>
             
-            <h3>6.4 Governance</h3>
-            <p>Within 14–21 days: GA4 + GTM event naming, UTM taxonomy, cross-domain/ATS continuity, quality signals cadence.</p>
-            
-            <h3>6.5 Cadence</h3>
-            <p>Weekly reviews, monthly decision-ready reports, quarterly strategic recalibration.</p>
-          </div>
-        </div>
-      </div>
-      
-      <!-- PAGE 8: LANDING PAGE + SEO -->
-      <div class="page" id="page-8">
-        <div class="section" id="section-7" data-section="7) Landing Page Optimization">
-          <div class="section-header">
-            <h2>7) Website / Landing Page Optimization</h2>
-            <button class="add-note-btn" onclick="quickAddNote('7) Landing Page Optimization')">+ Note</button>
-          </div>
-          <div class="section-content">
-            <h3>7.1 Why It Matters</h3>
-            <p>Media efficiency depends on the post-click experience. Goal: increase apply-start to apply-complete ratio while improving SQA.</p>
-            
-            <h3>7.2 First 30 Days</h3>
-            <p>Conversion audit of ebcareers.com → friction map → prioritized backlog.</p>
-            
-            <h3>7.3 Testing Roadmap</h3>
-            <p>One primary test per path. Expected: ~10–25% lift from friction fixes, ~5–15% from ongoing testing.</p>
-            
-            <h3>7.4 Compliance</h3>
-            <p>ADA/508 standards, EEO-aware design, minimal PII exposure, secure ATS handoff.</p>
+            <h3 class="commentable" data-id="s6-4-title">6.4 Governance</h3>
+            <p class="commentable" data-id="s6-4">Within 14–21 days: GA4 + GTM, UTM taxonomy, cross-domain/ATS continuity.</p>
           </div>
         </div>
         
-        <div class="section" id="section-8" data-section="8) SEO Strategy">
-          <div class="section-header">
-            <h2>8) SEO Strategy</h2>
-            <button class="add-note-btn" onclick="quickAddNote('8) SEO Strategy')">+ Note</button>
-          </div>
+        <div class="section">
+          <div class="section-header"><h2>7) Landing Page Optimization</h2></div>
           <div class="section-content">
-            <h3>8.1 Role</h3>
-            <p>Long-term lever for reducing paid media dependence while increasing high-intent inbound applicants.</p>
+            <h3 class="commentable" data-id="s7-1-title">7.1 Why It Matters</h3>
+            <p class="commentable" data-id="s7-1">Post-click experience determines efficiency. Goal: increase apply-start → apply-complete ratio.</p>
             
-            <h3>8.2 First 30 Days</h3>
-            <p>Audit: crawl/indexation, site architecture, page speed, canonicals, sitemap, JobPosting structured data.</p>
+            <h3 class="commentable" data-id="s7-2-title">7.2 First 30 Days</h3>
+            <p class="commentable" data-id="s7-2">Conversion audit of ebcareers.com → friction map → prioritized backlog.</p>
             
-            <h3>8.3 Content Modules</h3>
-            <p>Role explainers, career pathways, progression, FAQs, "day-in-the-life" elements.</p>
-            
-            <h3>8.4 Timeline</h3>
-            <p>0–30 days audit, 30–90 implementation, 3–6 months compounding, 6–12 months reduced paid reliance.</p>
+            <h3 class="commentable" data-id="s7-3-title">7.3 Testing</h3>
+            <p class="commentable" data-id="s7-3">~10–25% lift from friction fixes, ~5–15% from ongoing testing. ADA/508 compliant.</p>
           </div>
         </div>
       </div>
       
-      <!-- PAGE 9: BRAND CONTENT -->
-      <div class="page" id="page-9">
-        <div class="section" id="section-9" data-section="9) Brand Content Playbook">
-          <div class="section-header">
-            <h2>9) Brand Content Playbook</h2>
-            <button class="add-note-btn" onclick="quickAddNote('9) Brand Content Playbook')">+ Note</button>
-          </div>
+      <!-- PAGE 8: SEO + BRAND -->
+      <div class="page">
+        <div class="section">
+          <div class="section-header"><h2>8) SEO Strategy</h2></div>
           <div class="section-content">
-            <h3>9.1 Purpose</h3>
-            <p>Single, coherent employer narrative across channels with role-family precision.</p>
+            <h3 class="commentable" data-id="s8-1-title">8.1 Role</h3>
+            <p class="commentable" data-id="s8-1">Long-term lever for reducing paid dependence. Focus on engineering roles with high CPCs.</p>
             
-            <h3>9.2 Core Positioning</h3>
-            <p>Building the world's most advanced submarines, serving national security, offering long-term careers rooted in pride, stability, and craftsmanship.</p>
+            <h3 class="commentable" data-id="s8-2-title">8.2 First 30 Days</h3>
+            <p class="commentable" data-id="s8-2">Audit: crawl/indexation, architecture, speed, canonicals, sitemap, JobPosting schema.</p>
             
-            <h3>9.3 Messaging Architecture</h3>
-            <p>Hook → Proof → Role relevance → CTA aligned to candidate readiness.</p>
+            <h3 class="commentable" data-id="s8-3-title">8.3 Timeline</h3>
+            <p class="commentable" data-id="s8-3">0–30d audit, 30–90d implementation, 3–6mo compounding, 6–12mo reduced paid reliance.</p>
+          </div>
+        </div>
+        
+        <div class="section">
+          <div class="section-header"><h2>9) Brand Content Playbook</h2></div>
+          <div class="section-content">
+            <h3 class="commentable" data-id="s9-1-title">9.1 Core Positioning</h3>
+            <p class="commentable" data-id="s9-1">Building advanced submarines, serving national security, long-term careers in pride/stability/craftsmanship.</p>
             
-            <h3>9.4 Campaign Hooks</h3>
-            <h4>A) The Quiet Elite</h4>
+            <h3 class="commentable" data-id="s9-2-title">9.2 Campaign Hooks</h3>
+            <h4 class="commentable" data-id="s9-2a">A) The Quiet Elite</h4>
             <ul>
-              <li><strong>Trades:</strong> Elite craft. Quiet pride.</li>
-              <li><strong>Engineering:</strong> Elite thinking. Real stakes.</li>
-              <li><strong>Veterans:</strong> Continue the mission.</li>
-              <li><strong>Early Talent:</strong> Learn from the best. Earn your craft.</li>
+              <li class="commentable" data-id="s9-2a1">Trades: Elite craft. Quiet pride.</li>
+              <li class="commentable" data-id="s9-2a2">Engineering: Elite thinking. Real stakes.</li>
+              <li class="commentable" data-id="s9-2a3">Veterans: Continue the mission.</li>
             </ul>
-            
-            <h4>B) Built Different. Built to Last.</h4>
+            <h4 class="commentable" data-id="s9-2b">B) Built Different. Built to Last.</h4>
             <ul>
-              <li><strong>Trades:</strong> Build it right. Build it to last.</li>
-              <li><strong>Engineering:</strong> Design what endures.</li>
-              <li><strong>Veterans:</strong> Structure. Team. Purpose.</li>
-              <li><strong>Early Talent:</strong> A real start. A real path.</li>
-            </ul>
-            
-            <h3>9.5 CTA Rules</h3>
-            <ul>
-              <li><strong>Awareness:</strong> Learn / Explore</li>
-              <li><strong>Consideration:</strong> See Roles</li>
-              <li><strong>Retargeting:</strong> Finish Application</li>
+              <li class="commentable" data-id="s9-2b1">Trades: Build it right. Build it to last.</li>
+              <li class="commentable" data-id="s9-2b2">Engineering: Design what endures.</li>
+              <li class="commentable" data-id="s9-2b3">Early Talent: A real start. A real path.</li>
             </ul>
           </div>
         </div>
       </div>
       
-      <!-- PAGE 10: PRICING -->
-      <div class="page" id="page-10">
-        <div class="section" id="section-10" data-section="10) Pricing">
-          <div class="section-header">
-            <h2>10) Pricing Requirements</h2>
-            <button class="add-note-btn" onclick="quickAddNote('10) Pricing')">+ Note</button>
-          </div>
+      <!-- PAGE 9: PRICING -->
+      <div class="page">
+        <div class="section">
+          <div class="section-header"><h2>10) Pricing Requirements</h2></div>
           <div class="section-content">
-            <h3>10.1 Engagement Model</h3>
-            <p>Sprint-based: <strong>$7,500 per 2-week sprint</strong>. Parallel sprints available for urgency.</p>
+            <h3 class="commentable" data-id="s10-1-title">10.1 Engagement Model</h3>
+            <p class="commentable" data-id="s10-1"><strong>$7,500 per 2-week sprint.</strong> Parallel sprints available for urgency.</p>
             
-            <h3>10.2 Suggested Cadence</h3>
+            <h3 class="commentable" data-id="s10-2-title">10.2 Suggested Cadence</h3>
             <table>
-              <tr><td><strong>Month 1</strong></td><td>6 sprints</td><td>$45,000</td><td>Launch + foundation</td></tr>
-              <tr><td><strong>Month 2</strong></td><td>5 sprints</td><td>$37,500</td><td>Stabilization</td></tr>
-              <tr><td><strong>Months 3–12</strong></td><td>3–4/mo</td><td>$22,500–$30,000/mo</td><td>Ongoing</td></tr>
+              <tr class="commentable" data-id="s10-2a"><td><strong>Month 1</strong></td><td>6 sprints</td><td>$45,000</td></tr>
+              <tr class="commentable" data-id="s10-2b"><td><strong>Month 2</strong></td><td>5 sprints</td><td>$37,500</td></tr>
+              <tr class="commentable" data-id="s10-2c"><td><strong>Months 3–12</strong></td><td>3–4/mo</td><td>$22,500–$30,000/mo</td></tr>
             </table>
-            <p><strong>Annual services: ~$345,000</strong> (46 sprints)</p>
+            <p class="commentable" data-id="s10-2d"><strong>Annual services: ~$345,000</strong> (46 sprints)</p>
             
-            <h3>10.3 Media Management Fee</h3>
-            <p><strong>3% on managed spend</strong> = ~$60,000/year on $2M budget.</p>
+            <h3 class="commentable" data-id="s10-3-title">10.3 Media Fee</h3>
+            <p class="commentable" data-id="s10-3"><strong>3% on managed spend</strong> = ~$60K/year on $2M.</p>
             
-            <h3>10.4 If $2M All-In</h3>
+            <h3 class="commentable" data-id="s10-4-title">10.4 If $2M All-In</h3>
             <ul>
-              <li>Services: ~$345,000</li>
-              <li>Remaining for media + fee: ~$1.655M</li>
-              <li>Net media after 3%: ~$1.607M</li>
+              <li class="commentable" data-id="s10-4a">Services: ~$345K</li>
+              <li class="commentable" data-id="s10-4b">Remaining: ~$1.655M</li>
+              <li class="commentable" data-id="s10-4c">Net media after 3%: ~$1.607M</li>
             </ul>
-            
-            <h3>10.5 Pass-Through Policy</h3>
-            <p>No media markups. All third-party costs pre-approved and passed through at cost.</p>
           </div>
         </div>
-      </div>
-      
-      <!-- PAGE 11: TIMELINE -->
-      <div class="page" id="page-11">
-        <div class="section" id="section-11" data-section="11) Timeline">
-          <div class="section-header">
-            <h2>11) Timeline (Sprint-Based Execution Plan)</h2>
-            <button class="add-note-btn" onclick="quickAddNote('11) Timeline')">+ Note</button>
-          </div>
+        
+        <div class="section">
+          <div class="section-header"><h2>11) Timeline</h2></div>
           <div class="section-content">
-            <h3>11.1 Overview</h3>
-            <p>Two-week sprints, eight-week launch ramp, stabilization weeks 9–12, quarterly rhythm thereafter.</p>
-            
-            <h3>11.2 Weeks 1–8: Launch Ramp</h3>
+            <h3 class="commentable" data-id="s11-1-title">11.1 Launch Ramp (Weeks 1–8)</h3>
             <ul>
-              <li><strong>Sprint 1:</strong> Governance + tracking, ATS events, search architecture</li>
-              <li><strong>Sprint 2:</strong> Launch Search + retargeting; baseline CPA</li>
-              <li><strong>Sprint 3:</strong> Controlled prospecting, role-based creative</li>
-              <li><strong>Sprint 4:</strong> CTV prep, lift measurement, decision gate</li>
+              <li class="commentable" data-id="s11-1a"><strong>Sprint 1:</strong> Governance + tracking, ATS events, search architecture</li>
+              <li class="commentable" data-id="s11-1b"><strong>Sprint 2:</strong> Launch Search + retargeting; baseline CPA</li>
+              <li class="commentable" data-id="s11-1c"><strong>Sprint 3:</strong> Prospecting, role-based creative</li>
+              <li class="commentable" data-id="s11-1d"><strong>Sprint 4:</strong> CTV prep, lift measurement, decision gate</li>
             </ul>
             
-            <h3>11.3 Weeks 9–12: Stabilization</h3>
+            <h3 class="commentable" data-id="s11-2-title">11.2 Stabilization (Weeks 9–12)</h3>
             <ul>
-              <li><strong>Sprint 5:</strong> Scale top performers; refine queries/negatives</li>
-              <li><strong>Sprint 6:</strong> Priority friction fixes; next-quarter plan</li>
+              <li class="commentable" data-id="s11-2a"><strong>Sprint 5:</strong> Scale top performers; refine queries</li>
+              <li class="commentable" data-id="s11-2b"><strong>Sprint 6:</strong> Friction fixes; next-quarter plan</li>
             </ul>
             
-            <h3>11.4 Ongoing Rhythm</h3>
-            <p>Biweekly sprints, monthly reports, quarterly refreshes.</p>
+            <h3 class="commentable" data-id="s11-3-title">11.3 Ongoing</h3>
+            <p class="commentable" data-id="s11-3">Biweekly sprints, monthly reports, quarterly refreshes.</p>
           </div>
         </div>
       </div>
       
     </div>
     
-    <!-- Annotations Panel -->
-    <div class="annotations-panel">
-      <h3>📝 Change Requests</h3>
-      <div id="annotations-list"></div>
-      
-      <div class="add-annotation-form">
-        <select id="section-select">
-          <option value="">Select section...</option>
-          <option value="Cover Letter">Cover Letter</option>
-          <option value="1) Media Plan">1) Media Plan</option>
-          <option value="2) AdWords Strategy">2) AdWords Strategy</option>
-          <option value="3) Traditional & Broadcast">3) Traditional & Broadcast</option>
-          <option value="4) OOH Strategy">4) OOH Strategy</option>
-          <option value="5) Case Studies">5) Case Studies</option>
-          <option value="6) Measurement & Analytics">6) Measurement</option>
-          <option value="7) Landing Page Optimization">7) Landing Pages</option>
-          <option value="8) SEO Strategy">8) SEO</option>
-          <option value="9) Brand Content Playbook">9) Brand Content</option>
-          <option value="10) Pricing">10) Pricing</option>
-          <option value="11) Timeline">11) Timeline</option>
-        </select>
-        <textarea id="annotation-text" placeholder="Describe the change needed..."></textarea>
-        <button onclick="addAnnotation()">Add Change Request</button>
-      </div>
+    <!-- Comments Panel -->
+    <div class="comments-panel">
+      <div class="comments-panel-header">📝 Comments & Changes</div>
+      <div class="comments-list" id="comments-list"></div>
     </div>
   </div>
   
   <script>
-    // Annotations storage
-    let annotations = JSON.parse(localStorage.getItem('eb-rfp-annotations') || '[]');
+    let comments = JSON.parse(localStorage.getItem('eb-rfp-comments-v3') || '{}');
+    let commentMode = false;
+    let activeElement = null;
     
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-      renderAnnotations();
-      updateMarkers();
+      renderComments();
+      updateHighlights();
+      
+      // Click handler for commentable elements
+      document.querySelectorAll('.commentable').forEach(el => {
+        el.addEventListener('click', (e) => {
+          if (!commentMode) return;
+          e.stopPropagation();
+          openPopup(el);
+        });
+      });
+      
+      // Close popup when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.comment-popup') && !e.target.closest('.commentable')) {
+          closePopup();
+        }
+      });
     });
     
-    function renderAnnotations() {
-      const list = document.getElementById('annotations-list');
-      if (annotations.length === 0) {
-        list.innerHTML = '<p style="color:#999;font-size:0.85rem;text-align:center;padding:1rem;">No change requests yet.<br>Click "+ Note" on any section or use the form below.</p>';
+    function toggleCommentMode() {
+      commentMode = !commentMode;
+      document.body.classList.toggle('comment-mode', commentMode);
+      document.getElementById('mode-indicator').style.display = commentMode ? 'inline-block' : 'none';
+      document.getElementById('comment-mode-btn').textContent = commentMode ? '✓ Done' : '💬 Add Comments';
+      if (!commentMode) closePopup();
+    }
+    
+    function openPopup(el) {
+      activeElement = el;
+      const popup = document.getElementById('comment-popup');
+      const rect = el.getBoundingClientRect();
+      const existingComment = comments[el.dataset.id];
+      
+      document.getElementById('comment-input').value = existingComment || '';
+      
+      popup.style.top = Math.min(rect.top, window.innerHeight - 200) + 'px';
+      popup.style.left = Math.min(rect.right + 20, window.innerWidth - 300) + 'px';
+      popup.classList.add('active');
+      document.getElementById('comment-input').focus();
+    }
+    
+    function closePopup() {
+      document.getElementById('comment-popup').classList.remove('active');
+      activeElement = null;
+    }
+    
+    function saveComment() {
+      if (!activeElement) return;
+      const text = document.getElementById('comment-input').value.trim();
+      const id = activeElement.dataset.id;
+      
+      if (text) {
+        comments[id] = text;
+      } else {
+        delete comments[id];
+      }
+      
+      localStorage.setItem('eb-rfp-comments-v3', JSON.stringify(comments));
+      renderComments();
+      updateHighlights();
+      closePopup();
+    }
+    
+    function deleteComment(id) {
+      delete comments[id];
+      localStorage.setItem('eb-rfp-comments-v3', JSON.stringify(comments));
+      renderComments();
+      updateHighlights();
+    }
+    
+    function clearComments() {
+      if (confirm('Clear all comments?')) {
+        comments = {};
+        localStorage.setItem('eb-rfp-comments-v3', JSON.stringify(comments));
+        renderComments();
+        updateHighlights();
+      }
+    }
+    
+    function renderComments() {
+      const list = document.getElementById('comments-list');
+      const entries = Object.entries(comments);
+      
+      if (entries.length === 0) {
+        list.innerHTML = '<div class="no-comments"><strong>No comments yet</strong>Click "Add Comments" then click any text to leave a note.</div>';
         return;
       }
       
-      list.innerHTML = annotations.map((a, i) => `
-        <div class="annotation-item" onclick="scrollToSection('${a.section}')">
-          <button class="delete-btn" onclick="event.stopPropagation(); deleteAnnotation(${i})">×</button>
-          <div class="section-ref">📍 ${a.section}</div>
-          <div>${a.text}</div>
-        </div>
-      `).join('');
+      list.innerHTML = entries.map(([id, text]) => {
+        const el = document.querySelector(`[data-id="${id}"]`);
+        const preview = el ? el.textContent.substring(0, 40) + '...' : id;
+        return `
+          <div class="comment-card" onclick="scrollToElement('${id}')">
+            <button class="delete-btn" onclick="event.stopPropagation(); deleteComment('${id}')">×</button>
+            <div class="location">📍 ${preview}</div>
+            <div class="text">${text}</div>
+          </div>
+        `;
+      }).join('');
     }
     
-    function updateMarkers() {
-      // Remove existing markers
-      document.querySelectorAll('.has-annotation').forEach(el => {
-        el.classList.remove('has-annotation');
-      });
-      document.querySelectorAll('.annotation-marker').forEach(el => el.remove());
-      
-      // Group annotations by section
-      const sectionCounts = {};
-      annotations.forEach(a => {
-        sectionCounts[a.section] = (sectionCounts[a.section] || 0) + 1;
+    function updateHighlights() {
+      document.querySelectorAll('.commentable').forEach(el => {
+        el.classList.remove('has-comment');
+        const indicator = el.querySelector('.comment-indicator');
+        if (indicator) indicator.remove();
       });
       
-      // Add markers
-      Object.keys(sectionCounts).forEach(section => {
-        const el = document.querySelector(`[data-section="${section}"]`);
+      Object.keys(comments).forEach(id => {
+        const el = document.querySelector(`[data-id="${id}"]`);
         if (el) {
-          el.classList.add('has-annotation');
-          const marker = document.createElement('div');
-          marker.className = 'annotation-marker';
-          marker.textContent = sectionCounts[section];
-          marker.onclick = () => scrollToSection(section);
-          el.appendChild(marker);
+          el.classList.add('has-comment');
+          const indicator = document.createElement('span');
+          indicator.className = 'comment-indicator';
+          indicator.textContent = '💬';
+          indicator.onclick = (e) => { e.stopPropagation(); scrollToElement(id); };
+          el.appendChild(indicator);
         }
       });
     }
     
-    function addAnnotation() {
-      const section = document.getElementById('section-select').value;
-      const text = document.getElementById('annotation-text').value.trim();
-      
-      if (!section || !text) {
-        alert('Please select a section and enter your change request.');
-        return;
-      }
-      
-      annotations.push({ section, text, timestamp: new Date().toISOString() });
-      saveAnnotations();
-      renderAnnotations();
-      updateMarkers();
-      
-      document.getElementById('section-select').value = '';
-      document.getElementById('annotation-text').value = '';
-    }
-    
-    function quickAddNote(section) {
-      const text = prompt(`Change request for "${section}":`);
-      if (text && text.trim()) {
-        annotations.push({ section, text: text.trim(), timestamp: new Date().toISOString() });
-        saveAnnotations();
-        renderAnnotations();
-        updateMarkers();
-      }
-    }
-    
-    function deleteAnnotation(index) {
-      annotations.splice(index, 1);
-      saveAnnotations();
-      renderAnnotations();
-      updateMarkers();
-    }
-    
-    function clearAnnotations() {
-      if (confirm('Clear all change requests?')) {
-        annotations = [];
-        saveAnnotations();
-        renderAnnotations();
-        updateMarkers();
-      }
-    }
-    
-    function saveAnnotations() {
-      localStorage.setItem('eb-rfp-annotations', JSON.stringify(annotations));
-    }
-    
-    function scrollToSection(section) {
-      const el = document.querySelector(`[data-section="${section}"]`);
+    function scrollToElement(id) {
+      const el = document.querySelector(`[data-id="${id}"]`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        el.style.outline = '3px solid var(--annotation-color)';
-        setTimeout(() => { el.style.outline = ''; }, 2000);
+        el.style.outline = '3px solid var(--comment-yellow)';
+        el.style.outlineOffset = '2px';
+        setTimeout(() => { el.style.outline = ''; el.style.outlineOffset = ''; }, 2000);
       }
     }
     
     function exportPDF() {
-      const element = document.getElementById('rfp-document');
       document.body.classList.add('pdf-mode');
       
-      const opt = {
-        margin: 0.4,
-        filename: 'Figmints-Electric-Boat-RFP.pdf',
-        image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: { 
-          scale: 2,
-          useCORS: true,
-          logging: false
-        },
-        jsPDF: { 
-          unit: 'in', 
-          format: 'letter', 
-          orientation: 'portrait' 
-        },
-        pagebreak: { 
-          mode: 'css',
-          before: '.page',
-          avoid: ['img', 'table', '.case-study', '.section']
-        }
-      };
-      
-      html2pdf().set(opt).from(element).save().then(() => {
-        document.body.classList.remove('pdf-mode');
-      }).catch(err => {
-        console.error('PDF export error:', err);
-        document.body.classList.remove('pdf-mode');
-        alert('PDF export failed. Try using Cmd+P to print to PDF instead.');
-      });
+      html2pdf()
+        .set({
+          margin: 0.4,
+          filename: 'Figmints-Electric-Boat-RFP.pdf',
+          image: { type: 'jpeg', quality: 0.92 },
+          html2canvas: { scale: 2, useCORS: true, logging: false },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+          pagebreak: { mode: 'css', before: '.page' }
+        })
+        .from(document.getElementById('rfp-document'))
+        .save()
+        .then(() => document.body.classList.remove('pdf-mode'))
+        .catch(() => {
+          document.body.classList.remove('pdf-mode');
+          alert('PDF failed. Use Cmd+P instead.');
+        });
     }
+    
+    // Enter to save
+    document.getElementById('comment-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.metaKey) saveComment();
+    });
   </script>
 </body>
 </html>
